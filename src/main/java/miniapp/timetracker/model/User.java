@@ -3,12 +3,14 @@ package miniapp.timetracker.model;
 import jakarta.persistence.*;
 import lombok.Generated;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "tt_user")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
     @Column(nullable = false)
     private String name;
     @JoinColumn(name="role_id", nullable = false)
@@ -19,14 +21,20 @@ public class User {
 
     }
 
-    public User(Integer id, String name, Integer roleId) {
+    public User(UUID id, String name, Role role) {
+        this.id = id;
+        this.name = name;
+        this.role = role;
+    }
+
+    public User(UUID id, String name, UUID roleId) {
         this.id = id;
         this.name = name;
         this.role = new Role();
         this.role.setId(roleId);
     }
 
-        public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -38,7 +46,7 @@ public class User {
         return role;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -46,7 +54,7 @@ public class User {
         this.name = name;
     }
 
-    public void setRole(Integer role) {
+    public void setRole(UUID role) {
         this.role = new Role();
         this.role.setId(role);
     }

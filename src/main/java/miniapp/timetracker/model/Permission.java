@@ -5,10 +5,10 @@ import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tt_project")
-public class Project {
+@Table(name = "tt_permission")
+public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
-
+    UUID id;
+    String url;
 }
