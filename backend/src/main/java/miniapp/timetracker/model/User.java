@@ -13,49 +13,26 @@ public class User {
     private UUID id;
     @Column(nullable = false)
     private String name;
-    @JoinColumn(name="role_id", nullable = false)
-    @ManyToOne(fetch=FetchType.EAGER)
-    private Role role;
 
-    public User() {
-
-    }
-
-    public User(UUID id, String name, Role role) {
+    public User() {}
+    public User(UUID id, String name) {
         this.id = id;
         this.name = name;
-        this.role = role;
     }
-
     public User(UUID id, String name, UUID roleId) {
         this.id = id;
         this.name = name;
-        this.role = new Role();
-        this.role.setId(roleId);
     }
-
     public UUID getId() {
         return id;
     }
-
     public String getName() {
         return name;
     }
-
-    public Role getRole() {
-        return role;
-    }
-
     public void setId(UUID id) {
         this.id = id;
     }
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setRole(UUID role) {
-        this.role = new Role();
-        this.role.setId(role);
     }
 }

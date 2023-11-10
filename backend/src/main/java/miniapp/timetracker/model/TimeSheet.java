@@ -2,12 +2,13 @@ package miniapp.timetracker.model;
 
 import java.sql.Time;
 import java.util.Date;
-import java.util.Dictionary;
+import java.util.UUID;
 
-public class TimeSheetDay {
-    Project project;
+public class TimeSheet {
+    UUID projectId;
+    UUID userId;
     Time worktime;
     String description;
-    User user;
     Date date;
+    Boolean isFinished;
 }

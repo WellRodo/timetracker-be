@@ -1,7 +1,6 @@
 package miniapp.timetracker.controller;
 
 import miniapp.timetracker.model.User;
-import miniapp.timetracker.service.RoleService;
 import miniapp.timetracker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +14,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private RoleService roleService;
 
     @PostMapping
     private User add(@RequestBody User user) {
