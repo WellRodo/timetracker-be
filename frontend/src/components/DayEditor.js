@@ -44,9 +44,9 @@ class DayEditor extends Component {
   }
   
   refreshList = () => {
-    // Получение списка проектов для данного дня
+    // Получение списка таймшитов для данного дня
     axios
-      .get(`http://127.0.0.1:8000/days/${this.state.day.date}/`)
+      .get(`http://127.0.0.1:8000/day/${this.state.day.date}/`)
       .then(res => this.setState({ projectsList: res.data }))
       .catch(err => console.log(err));
     if (this.state.projectsList.length > 0) {
@@ -98,13 +98,13 @@ class DayEditor extends Component {
     if (item.id) {
       // if old post to edit and submit
       axios
-        .put(`http://127.0.0.1:8000/days/${item.id}/`, item)
+        .put(`http://127.0.0.1:8000/day/${item.id}/`, item)
         .then((res) => this.refreshList());
       return;
     }
     // if new post to submit
     axios
-      .post(`http://127.0.0.1:8000/days/${item.id}/`, item)
+      .post(`http://127.0.0.1:8000/day/${item.id}/`, item)
       .then((res) => this.refreshList());
   };
  
@@ -112,7 +112,7 @@ class DayEditor extends Component {
   handleDelete = (item) => {
     alert("delete" + JSON.stringify(item));
     axios
-      .delete(`http://127.0.0.1:8000/days/${item.id}/`)
+      .delete(`http://127.0.0.1:8000/day/${item.id}/`)
       .then((res) => this.refreshList());
   };
   
@@ -131,7 +131,7 @@ class DayEditor extends Component {
   makeItemsFinished = () => {
     for (let i = 0; i < this.state.projectsList.length; i++) {
       this.state.projectsList[i].isFinished = true;
-      axios.put(`http://127.0.0.1:8000/days/${this.state.projectsList[i].id}/`, this.state.projectsList[i]);
+      axios.put(`http://127.0.0.1:8000/day/${this.state.projectsList[i].id}/`, this.state.projectsList[i]);
     }
     this.refreshList();
   }

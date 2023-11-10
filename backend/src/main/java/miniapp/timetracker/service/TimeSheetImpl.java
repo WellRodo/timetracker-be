@@ -20,7 +20,7 @@ public class TimeSheetImpl implements TimeSheetService{
 
     @Override
     public TimeSheet[] GetTimeSheetFromPeriodAndProject(Date startDate, Date endDate, UUID projectId) {
-        return timeSheetRepo.searchTimeSheetsByDateBetweenAnAndProjectIdEquals(startDate, endDate, projectId);
+        return timeSheetRepo.searchTimeSheetsByDateBetweenAndProjectIdEquals(startDate, endDate, projectId);
     }
 
     @Override

@@ -10,6 +10,6 @@ import java.util.UUID;
 
 @Repository
 public interface TimeSheetRepository extends JpaRepository<TimeSheet, UUID> {
-    TimeSheet[] searchTimeSheetsByDateBetweenAnAndProjectIdEquals(Date startDate, Date endDate, UUID projectId);
+    TimeSheet[] searchTimeSheetsByDateBetweenAndProjectIdEquals(Date startDate, Date endDate, UUID projectId);
     TimeSheet[] searchTimeSheetsByDateEquals(Date date);
 }
