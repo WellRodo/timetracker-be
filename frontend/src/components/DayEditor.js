@@ -10,12 +10,32 @@ class DayEditor extends Component {
     this.state = {
       activeItem: {
         time: "",
-        project_id: "",
+        projectId: "",
         comment: ""
       },
+      isFinished: false,
       day: "08.11.2023",  // default значение 
       //day: props.day,
-      projectsList: []
+      projectsList: [
+        {
+          time: "3:00",
+          projectId: "b468530e-7fa3-11ee-b962-0242ac120002",
+          comment: "Реализация frontend части timetracker",
+          isFinished: false
+        },
+        {
+          time: "1:20",
+          projectId: "d268530e-8sq2-14ee-b762-3461dc124444",
+          comment: "Реализация backend части timetracker",
+          isFinished: false
+        },
+        {
+          time: "1:00",
+          projectId: "k666432r-1rr2-31ye-y942-2437kp076046",
+          comment: "Рефакторинг библиотеки Tracking",
+          isFinished: false
+        }
+      ]
     };
   }
  
@@ -29,6 +49,9 @@ class DayEditor extends Component {
       .get(`http://127.0.0.1:8000/days/${this.state.day.date}/`)
       .then(res => this.setState({ projectsList: res.data }))
       .catch(err => console.log(err));
+    if (this.state.projectsList.length > 0) {
+      this.setState({ isFinished: this.state.projectsList[0].isFinished });
+    }
   };
  
   // Main variable to render items on the screen
@@ -38,24 +61,27 @@ class DayEditor extends Component {
         key={project.id}
         className="list-group-item d-flex justify-content-between align-items-center"
       >
-        <span>{ project.time } </span> 
-        <span>{ project.project_id }</span> 
+        
+        <span>{ project.time }</span> 
+        <span>{ project.projectId }</span>
         <span>{ project.comment }</span>
         
-        <span>
-          <button
-            onClick={() => this.editItem(project)}
-            className="btn btn-secondary mr-2"
-          >
-            Edit
-          </button>
-          <button
-            onClick={() => this.handleDelete(project)}
-            className="btn btn-danger"
-          >
-            Delete
-          </button>
-        </span>
+        { this.state.isFinished ? "" : (
+          <div>
+            <button
+              onClick={() => this.editItem(project)}
+              className="btn btn-secondary mr-2"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => this.handleDelete(project)}
+              className="btn btn-danger"
+            >
+              Delete
+            </button>
+          </div>
+        )}
       </li>
     ));
   };
@@ -92,7 +118,7 @@ class DayEditor extends Component {
   
   // Create item
   createItem = () => {
-    const item = { time: "", project_id: "", comment: "" };
+    const item = { time: "", projectId: "", comment: "" };
     this.setState({ activeItem: item, modal: !this.state.modal });
   };
  
@@ -100,21 +126,35 @@ class DayEditor extends Component {
   editItem = (item) => {
     this.setState({ activeItem: item, modal: !this.state.modal });
   };
+
+  //Send (make day FINISHED)
+  makeItemsFinished = () => {
+    for (let i = 0; i < this.state.projectsList.length; i++) {
+      this.state.projectsList[i].isFinished = true;
+      axios.put(`http://127.0.0.1:8000/days/${this.state.projectsList[i].id}/`, this.state.projectsList[i]);
+    }
+    this.refreshList();
+  }
  
   render() {
     return (
       <div>
         <h2 className="text-success text-uppercase text-center my-4">
-          Редактирование рабочего дня
+          Рабочий день {this.state.day}
         </h2>
         <div className="row ">
+          { this.state.isFinished ? "" : (
+            <div className="">
+              <button onClick={this.createItem} className="btn btn-info">
+                Добавить проект
+              </button>
+              <button onClick={this.makeItemsFinished} className="btn btn-success">
+                Отправить
+              </button>
+            </div>
+          )}
           <div className="col-md-6 col-sm-10 mx-auto p-0">
             <div className="card p-3">
-              <div className="">
-                <button onClick={this.createItem} className="btn btn-info">
-                  Добавить проект
-                </button>
-              </div>
               <ul className="list-group list-group-flush">
                 {this.renderItems()}
               </ul>
