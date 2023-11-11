@@ -22,7 +22,7 @@ public class TimeSheetController {
 
     @GetMapping("/day/{date}")
     private TimeSheet[] get(@PathVariable String date) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date dt = formatter.parse(date);
         return timeSheetService.GetTimeSheetsByDate(dt);
     }
