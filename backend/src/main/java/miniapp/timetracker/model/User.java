@@ -14,25 +14,38 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    @JoinColumn(name="job_id")
+    @ManyToOne(fetch= FetchType.EAGER)
+    private Job job;
     public User() {}
-    public User(UUID id, String name) {
+
+    public User(UUID id, String name, Job job) {
         this.id = id;
         this.name = name;
+        this.job = job;
     }
-    public User(UUID id, String name, UUID roleId) {
-        this.id = id;
-        this.name = name;
-    }
+
     public UUID getId() {
         return id;
     }
-    public String getName() {
-        return name;
-    }
+
     public void setId(UUID id) {
         this.id = id;
     }
+
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Job getJob() {
+        return job;
+    }
+
+    public void setJob(Job job) {
+        this.job = job;
     }
 }

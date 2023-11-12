@@ -2,8 +2,8 @@ package miniapp.timetracker.model;
 
 import jakarta.persistence.*;
 
-import java.sql.Time;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -12,9 +12,13 @@ public class TimeSheet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     UUID id;
-    UUID projectId;
-    UUID userId;
-    Time worktime;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="project_id")
+    Project project;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="user_id")
+    User user;
+    Double workTime;
     String description;
     Date date;
     Boolean isFinished;
@@ -22,11 +26,11 @@ public class TimeSheet {
     public TimeSheet() {
     }
 
-    public TimeSheet(UUID id, UUID projectId, UUID userId, Time worktime, String description, Date date, Boolean isFinished) {
+    public TimeSheet(UUID id, Project project, User user, Double workTime, String description, Date date, Boolean isFinished) {
         this.id = id;
-        this.projectId = projectId;
-        this.userId = userId;
-        this.worktime = worktime;
+        this.project = project;
+        this.user = user;
+        this.workTime = workTime;
         this.description = description;
         this.date = date;
         this.isFinished = isFinished;
@@ -40,28 +44,28 @@ public class TimeSheet {
         this.id = id;
     }
 
-    public UUID getProjectId() {
-        return projectId;
+    public Project getProject() {
+        return project;
     }
 
-    public void setProjectId(UUID projectId) {
-        this.projectId = projectId;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
-    public UUID getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Time getWorktime() {
-        return worktime;
+    public Double getWorkTime() {
+        return workTime;
     }
 
-    public void setWorktime(Time worktime) {
-        this.worktime = worktime;
+    public void setWorkTime(Double workTime) {
+        this.workTime = workTime;
     }
 
     public String getDescription() {
