@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/timesheet")
 public class TimeSheetController {
     @Autowired
