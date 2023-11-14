@@ -18,8 +18,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+
 @RestController
-@CrossOrigin
 @RequestMapping("/timesheet")
 public class TimeSheetController {
     @Autowired
@@ -30,15 +30,21 @@ public class TimeSheetController {
 
 
     @GetMapping("/day/{date}")
-    private List<TimeSheet> get(@PathVariable String date) throws ParseException {
+    private ResponseEntity<Object> get(@PathVariable String date) throws ParseException{
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date dt = formatter.parse(date);
-        return timeSheetService.GetTimeSheetsByDate(dt);
+        try {
+            Date dt = formatter.parse(date);
+            return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.GetTimeSheetsByDate(dt));
+        }
+        catch(ParseException exception){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message("Неверный формат даты"));
+        }
     }
 
+
     @PostMapping("/day")
-    private void post(@RequestBody TimeSheetContract timeSheet){
-        timeSheetService.SaveTimeSheet(timeSheet);
+    private ResponseEntity<Object> post(@RequestBody TimeSheetContract timeSheet){
+        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.SaveTimeSheet(timeSheet));
     }
 
 
