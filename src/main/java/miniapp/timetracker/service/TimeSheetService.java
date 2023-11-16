@@ -1,8 +1,7 @@
 package miniapp.timetracker.service;
 
-import miniapp.timetracker.model.Project;
 import miniapp.timetracker.model.TimeSheet;
-import miniapp.timetracker.model.TimeSheetContract;
+import miniapp.timetracker.model.contracts.TimeSheetContract;
 
 import java.util.Date;
 import java.util.List;

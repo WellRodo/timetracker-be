@@ -7,10 +7,10 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-public class TimetrackerApplication {
+public class TimeTrackerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(TimetrackerApplication.class, args);
+		SpringApplication.run(TimeTrackerApplication.class, args);
 	}
 
 	@Bean

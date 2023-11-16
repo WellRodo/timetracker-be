@@ -1,7 +1,7 @@
 package miniapp.timetracker.controller;
 
 import miniapp.timetracker.model.User;
-import miniapp.timetracker.model.UserContract;
+import miniapp.timetracker.model.contracts.UserContract;
 import miniapp.timetracker.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

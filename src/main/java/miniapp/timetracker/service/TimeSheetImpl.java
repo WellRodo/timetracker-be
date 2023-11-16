@@ -1,9 +1,8 @@
 package miniapp.timetracker.service;
 
 import miniapp.timetracker.model.TimeSheet;
-import miniapp.timetracker.model.TimeSheetContract;
+import miniapp.timetracker.model.contracts.TimeSheetContract;
 import miniapp.timetracker.repository.TimeSheetRepository;
-import miniapp.timetracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

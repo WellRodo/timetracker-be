@@ -1,19 +1,16 @@
 package miniapp.timetracker.controller;
 
 import miniapp.timetracker.model.*;
-import miniapp.timetracker.service.JobService;
+import miniapp.timetracker.model.contracts.JobTimeOnProject;
+import miniapp.timetracker.model.contracts.ProjectTime;
+import miniapp.timetracker.model.contracts.TimeSheetContract;
 import miniapp.timetracker.service.ProjectsService;
 import miniapp.timetracker.service.TimeSheetService;
-import miniapp.timetracker.service.UserService;
-import org.apache.coyote.Response;
-import org.hibernate.resource.transaction.backend.jta.internal.synchronization.ExceptionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -101,4 +98,8 @@ public class TimeSheetController {
 
         return ResponseEntity.status(HttpStatus.OK).body(jobTimeOnProjects);
     }
+
+
+
+
 }
