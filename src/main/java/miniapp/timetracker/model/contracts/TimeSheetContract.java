@@ -1,5 +1,5 @@
 package miniapp.timetracker.model.contracts;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class TimeSheetContract {
@@ -7,13 +7,13 @@ public class TimeSheetContract {
     UUID userId;
     Double workTime;
     String description;
-    Date date;
+    LocalDate date;
     Boolean isFinished;
 
     public TimeSheetContract() {
     }
 
-    public TimeSheetContract(UUID projectId, UUID userId, Double workTime, String description, Date date, Boolean isFinished) {
+    public TimeSheetContract(UUID projectId, UUID userId, Double workTime, String description, LocalDate date, Boolean isFinished) {
         this.projectId = projectId;
         this.userId = userId;
         this.workTime = workTime;
@@ -55,11 +55,11 @@ public class TimeSheetContract {
         this.description = description;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

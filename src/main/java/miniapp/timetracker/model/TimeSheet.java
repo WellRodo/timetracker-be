@@ -2,8 +2,7 @@ package miniapp.timetracker.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
-import java.util.Set;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -20,13 +19,13 @@ public class TimeSheet {
     User user;
     Double workTime;
     String description;
-    Date date;
+    LocalDate date;
     Boolean isFinished;
 
     public TimeSheet() {
     }
 
-    public TimeSheet(UUID id, Project project, User user, Double workTime, String description, Date date, Boolean isFinished) {
+    public TimeSheet(UUID id, Project project, User user, Double workTime, String description, LocalDate date, Boolean isFinished) {
         this.id = id;
         this.project = project;
         this.user = user;
@@ -76,11 +75,11 @@ public class TimeSheet {
         this.description = description;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

@@ -13,7 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 @RestController
@@ -27,20 +30,15 @@ public class TimeSheetController {
 
 
     @GetMapping("/day/{date}")
-    private ResponseEntity<Object> get(@PathVariable String date) throws ParseException{
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date dt = formatter.parse(date);
-            return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.GetTimeSheetsByDate(dt));
-        }
-        catch(ParseException exception){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message("Неверный формат даты"));
-        }
+    private ResponseEntity<Object> get(@PathVariable String date) {
+        LocalDate dt = LocalDate.parse(date);
+        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.GetTimeSheetsByDate(dt));
     }
 
 
     @PostMapping("/day")
     private ResponseEntity<Object> post(@RequestBody TimeSheetContract timeSheet){
+        Logger.getGlobal().log(Level.INFO, timeSheet.getDate().toString());
         return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.SaveTimeSheet(timeSheet));
     }
 
@@ -48,10 +46,10 @@ public class TimeSheetController {
     //Получение общего времени на проекте за определенное время
     @GetMapping("/project/time")
     @ResponseBody
-    private ProjectTime getProjectTime(@RequestHeader("dateStart") String dateStart, @RequestHeader("dateEnd") String dateEnd, @RequestHeader("projectId") UUID projectId) throws ParseException {
+    private ProjectTime getProjectTime(@RequestHeader("dateStart") String dateStart, @RequestHeader("dateEnd") String dateEnd, @RequestHeader("projectId") UUID projectId) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date dtStart = formatter.parse(dateStart);
-        Date dtEnd = formatter.parse(dateEnd);
+        LocalDate dtStart = LocalDate.parse(dateStart);
+        LocalDate dtEnd = LocalDate.parse(dateEnd);
         List<TimeSheet> timeSheetList =  timeSheetService.GetTimeSheetFromPeriodAndProject(dtStart, dtEnd, projectId);
         ProjectTime projectTime = new ProjectTime("", 0.0);
 
@@ -67,10 +65,10 @@ public class TimeSheetController {
     //Получение времени по должностям на проекте за определенное время
     @GetMapping("/job/time")
     @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
-    private ResponseEntity<Object> getJobTime(@RequestHeader("dateStart") String dateStart, @RequestHeader("dateEnd") String dateEnd, @RequestHeader("projectId") UUID projectId) throws ParseException {
+    private ResponseEntity<Object> getJobTime(@RequestHeader("dateStart") String dateStart, @RequestHeader("dateEnd") String dateEnd, @RequestHeader("projectId") UUID projectId) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date dtStart = formatter.parse(dateStart);
-        Date dtEnd = formatter.parse(dateEnd);
+        LocalDate dtStart = LocalDate.parse(dateStart);
+        LocalDate dtEnd = LocalDate.parse(dateEnd);
         List<TimeSheet> timeSheetList =  timeSheetService.GetTimeSheetFromPeriodAndProject(dtStart, dtEnd, projectId);
         if(timeSheetList.size() == 0){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Message("Таймшиты не найдены"));
@@ -99,7 +97,15 @@ public class TimeSheetController {
         return ResponseEntity.status(HttpStatus.OK).body(jobTimeOnProjects);
     }
 
+    @PutMapping("/day/{timeSheetId}")
+    @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
+    private ResponseEntity<Object> putTimeSheet(@RequestBody TimeSheetContract timeSheet, @PathVariable UUID timeSheetId) {
+        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.UpdateTimeSheet(timeSheet, timeSheetId));
+    }
 
-
-
+    @DeleteMapping("/day/{timeSheetId}")
+    @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
+    private ResponseEntity<Object> deleteTimeSheet(@PathVariable UUID timeSheetId) {
+        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.DeleteTimeSheet(timeSheetId));
+    }
 }

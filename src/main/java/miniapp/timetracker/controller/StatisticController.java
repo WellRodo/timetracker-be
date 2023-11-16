@@ -2,7 +2,6 @@ package miniapp.timetracker.controller;
 
 import miniapp.timetracker.model.Message;
 import miniapp.timetracker.model.TimeSheet;
-import miniapp.timetracker.model.contracts.UserStatistics;
 import miniapp.timetracker.service.ProjectsService;
 import miniapp.timetracker.service.TimeSheetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -28,9 +27,8 @@ public class StatisticController {
             @PathVariable("dateEnd") String dateEnd,
             @PathVariable("projectId") UUID projectId) throws ParseException {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date dtStart = formatter.parse(dateStart);
-        Date dtEnd = formatter.parse(dateEnd);
+        LocalDate dtStart =  LocalDate.parse(dateStart);
+        LocalDate dtEnd =LocalDate.parse(dateEnd);
         List<TimeSheet> timeSheetList = timeSheetService.GetTimeSheetFromPeriodAndProject(dtStart, dtEnd, projectId);
         if (timeSheetList.size() == 0) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Message("Таймшиты не найдены"));
