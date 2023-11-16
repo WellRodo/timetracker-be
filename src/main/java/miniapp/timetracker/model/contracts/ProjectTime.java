@@ -6,6 +6,7 @@ public class ProjectTime {
     Double time;
 
     public ProjectTime() {
+        this.time = 0.0;
     }
 
     public ProjectTime(String projectName, Double time) {
@@ -28,4 +29,6 @@ public class ProjectTime {
     public void setTime(Double time) {
         this.time = time;
     }
+
+    public void addTime(Double time){this.time += time;}
 }
