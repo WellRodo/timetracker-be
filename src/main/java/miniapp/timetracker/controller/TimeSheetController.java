@@ -97,7 +97,7 @@ public class TimeSheetController {
         return ResponseEntity.status(HttpStatus.OK).body(jobTimeOnProjects);
     }
 
-/*    @PutMapping("/day/{timeSheetId}")
+   @PutMapping("/day/{timeSheetId}")
     @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
     private ResponseEntity<Object> putTimeSheet(@RequestBody TimeSheetContract timeSheet, @PathVariable UUID timeSheetId) {
         return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.UpdateTimeSheet(timeSheet, timeSheetId));
@@ -107,5 +107,5 @@ public class TimeSheetController {
     @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
     private ResponseEntity<Object> deleteTimeSheet(@PathVariable UUID timeSheetId) {
         return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.DeleteTimeSheet(timeSheetId));
-    }*/
+    }
 }

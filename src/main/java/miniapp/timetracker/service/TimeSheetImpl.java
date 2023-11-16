@@ -45,4 +45,25 @@ public class TimeSheetImpl implements TimeSheetService{
     public List<TimeSheet> GetTimeSheetsByDate(LocalDate date) {
         return timeSheetRepo.searchTimeSheetsByDateEquals(date);
     }
+
+    @Override
+    public TimeSheet UpdateTimeSheet(TimeSheetContract timeSheet, UUID timeSheetId) {
+        TimeSheet updTimeSheet = new TimeSheet(
+                timeSheetId,
+                projectsService.getProject(timeSheet.getProjectId()),
+                userService.GetUser(timeSheet.getUserId()),
+                timeSheet.getWorkTime(),
+                timeSheet.getDescription(),
+                timeSheet.getDate(),
+                timeSheet.getFinished()
+        );
+        return timeSheetRepo.save(updTimeSheet);
+    }
+
+    @Override
+    public TimeSheet DeleteTimeSheet(UUID timeSheetId) {
+        TimeSheet timeSheet = timeSheetRepo.findById(timeSheetId).get();
+        timeSheetRepo.deleteById(timeSheetId);
+        return timeSheet;
+    }
 }

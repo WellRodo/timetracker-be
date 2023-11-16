@@ -14,4 +14,6 @@ public interface TimeSheetService {
     public List<TimeSheet> GetTimeSheetFromPeriod(LocalDate startDate, LocalDate endDate);
     public TimeSheet SaveTimeSheet(TimeSheetContract timeSheet);
     public List<TimeSheet> GetTimeSheetsByDate(LocalDate date);
+    public TimeSheet DeleteTimeSheet(UUID timeSheetId);
+    public TimeSheet UpdateTimeSheet(TimeSheetContract timeSheet, UUID timeSheetId);
 }
