@@ -3,6 +3,7 @@ package miniapp.timetracker.service;
 import miniapp.timetracker.model.TimeSheet;
 import miniapp.timetracker.model.contracts.FinishTimeSheetsContract;
 import miniapp.timetracker.model.contracts.TimeSheetContract;
+import miniapp.timetracker.model.contracts.UserStatistics;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -18,4 +19,6 @@ public interface TimeSheetService {
     public TimeSheet DeleteTimeSheet(UUID timeSheetId);
     public TimeSheet UpdateTimeSheet(TimeSheetContract timeSheet, UUID timeSheetId);
     public void FinishTimeSheets(FinishTimeSheetsContract timeSheets);
+    public List<UserStatistics> getUserStatisticsByProject(String dateStart, String dateEnd, UUID projectId);
+    public List<UserStatistics> getUserStatisticsAllProjects(String dateStart, String dateEnd);
 }

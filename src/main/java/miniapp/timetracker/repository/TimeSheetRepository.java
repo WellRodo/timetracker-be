@@ -18,7 +18,6 @@ public interface TimeSheetRepository extends JpaRepository<TimeSheet, UUID> {
     List<TimeSheet> searchTimeSheetsByDateBetweenAndProjectIdEquals(LocalDate startDate, LocalDate endDate, UUID projectId);
     List<TimeSheet> searchTimeSheetsByDateEquals(LocalDate date);
     List<TimeSheet> searchTimeSheetsByDateBetween(LocalDate startDate, LocalDate endDate);
-
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE tt_time_sheet SET is_finished = (:name) WHERE id IN (:id)", nativeQuery = true)

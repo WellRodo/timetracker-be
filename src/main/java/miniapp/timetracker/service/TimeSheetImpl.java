@@ -1,14 +1,18 @@
 package miniapp.timetracker.service;
 
+import miniapp.timetracker.model.Project;
 import miniapp.timetracker.model.TimeSheet;
-import miniapp.timetracker.model.contracts.FinishTimeSheetsContract;
-import miniapp.timetracker.model.contracts.TimeSheetContract;
+import miniapp.timetracker.model.User;
+import miniapp.timetracker.model.contracts.*;
 import miniapp.timetracker.repository.TimeSheetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 @Service
@@ -44,7 +48,9 @@ public class TimeSheetImpl implements TimeSheetService{
 
     @Override
     public List<TimeSheet> GetTimeSheetsByDate(LocalDate date) {
-        return timeSheetRepo.searchTimeSheetsByDateEquals(date);
+        List<TimeSheet> timeSheetList = timeSheetRepo.searchTimeSheetsByDateEquals(date);
+        if(timeSheetList.isEmpty()) throw new CustomException(HttpStatus.NOT_FOUND, "Таймшиты не найдены");
+        else return timeSheetRepo.searchTimeSheetsByDateEquals(date);
     }
 
     @Override
@@ -71,5 +77,68 @@ public class TimeSheetImpl implements TimeSheetService{
     @Override
     public void FinishTimeSheets(FinishTimeSheetsContract timeSheets) {
         timeSheetRepo.updateFinished(true, timeSheets.timesheetIDs);
+    }
+
+    @Override
+    public List<UserStatistics> getUserStatisticsByProject(String dateStart, String dateEnd, UUID projectId) {
+        List<TimeSheet> timeSheetList = GetTimeSheetFromPeriodAndProject(LocalDate.parse(dateStart), LocalDate.parse(dateEnd), projectId);
+        if (timeSheetList.size() == 0) throw new CustomException(HttpStatus.NOT_FOUND, "За данный период не найдено Таймшитов");
+        List<User> userList = userService.GetAll(); // Список всех пользователей
+        List<UserStatistics> userStatisticsList = new ArrayList<>(); //Возвращаемый список
+
+        int i = 0;
+        for(User user: userList){
+            userStatisticsList.add(new UserStatistics(user, new ArrayList<ProjectTime>()));
+            userStatisticsList.get(i).getProjectTimeList().add(new ProjectTime());
+            userStatisticsList.get(i).getProjectTimeList().get(0).setProjectName(projectsService.getProjectName(projectId));
+            for (TimeSheet timeSheet : timeSheetList) {
+                try {
+                    if(timeSheet.getUser().equals(user))
+                        userStatisticsList.get(i).getProjectTimeList().get(0).addTime(timeSheet.getWorkTime());
+                } catch (Exception ex) {
+                    throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+                }
+            } i++;
+        }  return userStatisticsList;
+    }
+
+    private UserStatistics addNewUserStatistic(User user){
+        List<Project> projectList = projectsService.getAllProjectsByUser(user.getId()); // Список всех проектов на которых есть юзер
+        List<ProjectTime> projectTimeList = new ArrayList<>();
+        for(Project project:projectList){
+            projectTimeList.add(new ProjectTime(project.getName(), 0d));
+        }
+        return new UserStatistics(user, projectTimeList);
+    }
+    @Override
+    public List<UserStatistics> getUserStatisticsAllProjects(String dateStart, String dateEnd) {
+
+        List<TimeSheet> timeSheetList = GetTimeSheetFromPeriod(LocalDate.parse(dateStart), LocalDate.parse(dateEnd));
+        if (timeSheetList.size() == 0) throw new CustomException(HttpStatus.NOT_FOUND, "За данный период не найдено Таймшитов");
+
+        List<User> userList = userService.GetAll(); // Список всех пользователей
+        List<UserStatistics> userStatisticsList = new ArrayList<>(); //Возвращаемый список
+
+        try {
+            int i = 0;
+            for(User user: userList){
+                userStatisticsList.add(addNewUserStatistic(user));
+
+                for (TimeSheet timeSheet : timeSheetList) {
+                    if(timeSheet.getUser().equals(user)){
+                        int j = 0;
+                        for(ProjectTime projectTime : userStatisticsList.get(i).getProjectTimeList()){
+
+                            if(timeSheet.getProject().getName() == (projectTime.getProjectName())){
+                                userStatisticsList.get(i).getProjectTimeList().get(j).addTime(timeSheet.getWorkTime());
+                            }
+                            j++;
+                        }
+                    }
+                } i++;
+            }
+        }catch (Exception ex){
+            throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        } return userStatisticsList;
     }
 }

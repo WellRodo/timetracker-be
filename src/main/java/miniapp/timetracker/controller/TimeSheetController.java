@@ -1,10 +1,7 @@
 package miniapp.timetracker.controller;
 
 import miniapp.timetracker.model.*;
-import miniapp.timetracker.model.contracts.FinishTimeSheetsContract;
-import miniapp.timetracker.model.contracts.JobTimeOnProject;
-import miniapp.timetracker.model.contracts.ProjectTime;
-import miniapp.timetracker.model.contracts.TimeSheetContract;
+import miniapp.timetracker.model.contracts.*;
 import miniapp.timetracker.service.ProjectsService;
 import miniapp.timetracker.service.TimeSheetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +9,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
@@ -66,14 +63,13 @@ public class TimeSheetController {
 
     //Получение времени по должностям на проекте за определенное время
     @GetMapping("/job/time")
-    @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
     private ResponseEntity<Object> getJobTime(@RequestHeader("dateStart") String dateStart, @RequestHeader("dateEnd") String dateEnd, @RequestHeader("projectId") UUID projectId) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         LocalDate dtStart = LocalDate.parse(dateStart);
         LocalDate dtEnd = LocalDate.parse(dateEnd);
         List<TimeSheet> timeSheetList =  timeSheetService.GetTimeSheetFromPeriodAndProject(dtStart, dtEnd, projectId);
         if(timeSheetList.size() == 0){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Message("Таймшиты не найдены"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message("Таймшиты не найдены",HttpStatus.NOT_FOUND));
         }
 
         Map<String , Double> jobTime = new HashMap<>();
@@ -86,7 +82,7 @@ public class TimeSheetController {
                 else
                     jobTime.put(jobName, timeSheet.getWorkTime());
             }catch (Exception ex){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Message(ex.getMessage()));
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Message(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR));
             }
 
         }
@@ -100,26 +96,23 @@ public class TimeSheetController {
     }
 
     @PutMapping("/day/{timeSheetId}")
-    @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
     private ResponseEntity<Object> putTimeSheet(@RequestBody TimeSheetContract timeSheet, @PathVariable UUID timeSheetId) {
         return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.UpdateTimeSheet(timeSheet, timeSheetId));
     }
 
     @PutMapping("/day/finish")
-    @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
     private ResponseEntity<Object> finishTimeSheets(@RequestBody FinishTimeSheetsContract timeSheets) {
         try{
             timeSheetService.FinishTimeSheets(timeSheets);
-            return ResponseEntity.status(HttpStatus.OK).body(new Message("Завершено"));
+            return ResponseEntity.status(HttpStatus.OK).body(new Message("Завершено",HttpStatus.OK));
         }
         catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.OK).body(new Message(ex.getMessage()));
+            return ResponseEntity.status(HttpStatus.OK).body(new Message(ex.getMessage(),HttpStatus.NOT_FOUND));
         }
 
     }
 
     @DeleteMapping("/day/{timeSheetId}")
-    @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
     private ResponseEntity<Object> deleteTimeSheet(@PathVariable UUID timeSheetId) {
         return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.DeleteTimeSheet(timeSheetId));
     }
