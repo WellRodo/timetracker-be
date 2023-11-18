@@ -108,8 +108,14 @@ public class TimeSheetController {
     @PutMapping("/day/finish")
     @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
     private ResponseEntity<Object> finishTimeSheets(@RequestBody FinishTimeSheetsContract timeSheets) {
-//        timeSheetService.FinishTimeSheets(timeSheets);
-        return ResponseEntity.status(HttpStatus.OK).body(new Message("Завершено"));
+        try{
+            timeSheetService.FinishTimeSheets(timeSheets);
+            return ResponseEntity.status(HttpStatus.OK).body(new Message("Завершено"));
+        }
+        catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.OK).body(new Message(ex.getMessage()));
+        }
+
     }
 
     @DeleteMapping("/day/{timeSheetId}")

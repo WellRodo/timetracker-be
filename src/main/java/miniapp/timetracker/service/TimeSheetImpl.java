@@ -68,8 +68,8 @@ public class TimeSheetImpl implements TimeSheetService{
         return timeSheet;
     }
 
-//    @Override
-//    public void FinishTimeSheets(FinishTimeSheetsContract timeSheets) {
-//        timeSheetRepo.updateFinished(true, timeSheets.timesheetIDs);
-//    }
+    @Override
+    public void FinishTimeSheets(FinishTimeSheetsContract timeSheets) {
+        timeSheetRepo.updateFinished(true, timeSheets.timesheetIDs);
+    }
 }
