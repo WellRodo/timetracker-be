@@ -1,5 +1,7 @@
 package miniapp.timetracker.service;
 
+import miniapp.timetracker.model.contracts.FinishTimeSheetsContract;
+import miniapp.timetracker.model.contracts.TimeSheetContract;
 import miniapp.timetracker.model.Project;
 import miniapp.timetracker.model.TimeSheet;
 import miniapp.timetracker.model.User;
@@ -7,10 +9,8 @@ import miniapp.timetracker.model.contracts.*;
 import miniapp.timetracker.repository.TimeSheetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +49,9 @@ public class TimeSheetImpl implements TimeSheetService{
     @Override
     public List<TimeSheet> GetTimeSheetsByDate(LocalDate date) {
         List<TimeSheet> timeSheetList = timeSheetRepo.searchTimeSheetsByDateEquals(date);
-        if(timeSheetList.isEmpty()) throw new CustomException(HttpStatus.NOT_FOUND, "Таймшиты не найдены");
-        else return timeSheetRepo.searchTimeSheetsByDateEquals(date);
+        return timeSheetList;
+//        if(timeSheetList.isEmpty()) throw new CustomException(HttpStatus.NOT_FOUND, "Таймшиты не найдены");
+//        else return timeSheetRepo.searchTimeSheetsByDateEquals(date);
     }
 
     @Override
@@ -80,8 +81,8 @@ public class TimeSheetImpl implements TimeSheetService{
     }
 
     @Override
-    public List<UserStatistics> getUserStatisticsByProject(String dateStart, String dateEnd, UUID projectId) {
-        List<TimeSheet> timeSheetList = GetTimeSheetFromPeriodAndProject(LocalDate.parse(dateStart), LocalDate.parse(dateEnd), projectId);
+    public List<UserStatistics> getUserStatisticsByProject(LocalDate dateStart, LocalDate dateEnd, UUID projectId) {
+        List<TimeSheet> timeSheetList = GetTimeSheetFromPeriodAndProject(dateStart, dateEnd, projectId);
         if (timeSheetList.size() == 0) throw new CustomException(HttpStatus.NOT_FOUND, "За данный период не найдено Таймшитов");
         List<User> userList = userService.GetAll(); // Список всех пользователей
         List<UserStatistics> userStatisticsList = new ArrayList<>(); //Возвращаемый список
@@ -111,9 +112,9 @@ public class TimeSheetImpl implements TimeSheetService{
         return new UserStatistics(user, projectTimeList);
     }
     @Override
-    public List<UserStatistics> getUserStatisticsAllProjects(String dateStart, String dateEnd) {
+    public List<UserStatistics> getUserStatisticsAllProjects(LocalDate dateStart, LocalDate dateEnd) {
 
-        List<TimeSheet> timeSheetList = GetTimeSheetFromPeriod(LocalDate.parse(dateStart), LocalDate.parse(dateEnd));
+        List<TimeSheet> timeSheetList = GetTimeSheetFromPeriod(dateStart, dateEnd);
         if (timeSheetList.size() == 0) throw new CustomException(HttpStatus.NOT_FOUND, "За данный период не найдено Таймшитов");
 
         List<User> userList = userService.GetAll(); // Список всех пользователей

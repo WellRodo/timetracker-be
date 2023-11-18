@@ -1,6 +1,5 @@
 package miniapp.timetracker.model.contracts;
 
-import miniapp.timetracker.model.Job;
 import miniapp.timetracker.model.User;
 
 import java.util.List;
