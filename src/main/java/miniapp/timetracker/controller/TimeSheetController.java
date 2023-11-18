@@ -1,6 +1,7 @@
 package miniapp.timetracker.controller;
 
 import miniapp.timetracker.model.*;
+import miniapp.timetracker.model.contracts.FinishTimeSheetsContract;
 import miniapp.timetracker.model.contracts.JobTimeOnProject;
 import miniapp.timetracker.model.contracts.ProjectTime;
 import miniapp.timetracker.model.contracts.TimeSheetContract;
@@ -21,6 +22,7 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/timesheet")
+@CrossOrigin
 public class TimeSheetController {
     @Autowired
     private TimeSheetService timeSheetService;
@@ -97,10 +99,17 @@ public class TimeSheetController {
         return ResponseEntity.status(HttpStatus.OK).body(jobTimeOnProjects);
     }
 
-   @PutMapping("/day/{timeSheetId}")
+    @PutMapping("/day/{timeSheetId}")
     @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
     private ResponseEntity<Object> putTimeSheet(@RequestBody TimeSheetContract timeSheet, @PathVariable UUID timeSheetId) {
         return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.UpdateTimeSheet(timeSheet, timeSheetId));
+    }
+
+    @PutMapping("/day/finish")
+    @ExceptionHandler(ChangeSetPersister.NotFoundException.class)
+    private ResponseEntity<Object> finishTimeSheets(@RequestBody FinishTimeSheetsContract timeSheets) {
+//        timeSheetService.FinishTimeSheets(timeSheets);
+        return ResponseEntity.status(HttpStatus.OK).body(new Message("Завершено"));
     }
 
     @DeleteMapping("/day/{timeSheetId}")

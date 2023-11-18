@@ -1,6 +1,7 @@
 package miniapp.timetracker.service;
 
 import miniapp.timetracker.model.TimeSheet;
+import miniapp.timetracker.model.contracts.FinishTimeSheetsContract;
 import miniapp.timetracker.model.contracts.TimeSheetContract;
 
 import java.time.LocalDate;
@@ -16,4 +17,5 @@ public interface TimeSheetService {
     public List<TimeSheet> GetTimeSheetsByDate(LocalDate date);
     public TimeSheet DeleteTimeSheet(UUID timeSheetId);
     public TimeSheet UpdateTimeSheet(TimeSheetContract timeSheet, UUID timeSheetId);
+//    public void FinishTimeSheets(FinishTimeSheetsContract timeSheets);
 }

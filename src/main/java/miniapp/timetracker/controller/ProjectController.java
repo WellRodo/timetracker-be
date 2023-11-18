@@ -10,6 +10,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/dictionary")
+@CrossOrigin
 public class ProjectController {
 
     @Autowired

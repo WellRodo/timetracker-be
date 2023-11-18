@@ -21,6 +21,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/statistic")
+@CrossOrigin
 public class StatisticController {
     @Autowired
     private TimeSheetService timeSheetService;

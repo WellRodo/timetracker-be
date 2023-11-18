@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/dictionary/user")
+@CrossOrigin
 public class UserController {
 
     @Autowired

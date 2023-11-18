@@ -39,7 +39,7 @@ public class ProjectsImpl implements ProjectsService {
 
     @Override
     public String getProjectName(UUID projectId){
-        Optional<Project> project =  projectRepository.findById(projectId);
+        Optional<Project> project = projectRepository.findById(projectId);
         return project.get().getName();
     }
 

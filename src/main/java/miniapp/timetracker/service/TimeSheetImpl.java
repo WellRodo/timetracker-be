@@ -1,6 +1,7 @@
 package miniapp.timetracker.service;
 
 import miniapp.timetracker.model.TimeSheet;
+import miniapp.timetracker.model.contracts.FinishTimeSheetsContract;
 import miniapp.timetracker.model.contracts.TimeSheetContract;
 import miniapp.timetracker.repository.TimeSheetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,4 +67,9 @@ public class TimeSheetImpl implements TimeSheetService{
         timeSheetRepo.deleteById(timeSheetId);
         return timeSheet;
     }
+
+//    @Override
+//    public void FinishTimeSheets(FinishTimeSheetsContract timeSheets) {
+//        timeSheetRepo.updateFinished(true, timeSheets.timesheetIDs);
+//    }
 }
