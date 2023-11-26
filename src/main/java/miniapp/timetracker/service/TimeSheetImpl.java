@@ -16,11 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 @Service
-public class TimeSheetImpl implements TimeSheetService{
+public class TimeSheetImpl implements TimeSheetService {
     @Autowired
     private TimeSheetRepository timeSheetRepo;
-    @Autowired ProjectsService projectsService;
-    @Autowired UserService userService;
+    @Autowired
+    ProjectsService projectsService;
+    @Autowired
+    UserService userService;
 
     @Override
     public TimeSheet SaveTimeSheet(TimeSheetContract timeSheetContract) {
@@ -42,7 +44,21 @@ public class TimeSheetImpl implements TimeSheetService{
     }
 
     @Override
-    public List<TimeSheet> GetTimeSheetFromPeriod(LocalDate startDate, LocalDate endDate) {
+    public ProjectTime GetProjectWorkTimePeriod(LocalDate startDate, LocalDate endDate, UUID projectId) {
+        List<TimeSheet> timeSheetsProject = timeSheetRepo.searchTimeSheetsByDateBetweenAndProjectIdEquals(startDate, endDate, projectId);
+
+        ProjectTime projectTime = new ProjectTime("", 0.0);
+
+        projectTime.setProjectName(projectsService.getProjectName(projectId));
+
+        for (TimeSheet timeSheet : timeSheetsProject) {
+            projectTime.setTime(projectTime.getTime() + timeSheet.getWorkTime());
+        }
+
+        return projectTime;
+    }
+
+    public List<TimeSheet> GetTimeSheetFromPeriodAndProject(LocalDate startDate, LocalDate endDate) {
         return timeSheetRepo.searchTimeSheetsByDateBetween(startDate, endDate);
     }
 
@@ -114,7 +130,7 @@ public class TimeSheetImpl implements TimeSheetService{
     @Override
     public List<UserStatistics> getUserStatisticsAllProjects(LocalDate dateStart, LocalDate dateEnd) {
 
-        List<TimeSheet> timeSheetList = GetTimeSheetFromPeriod(dateStart, dateEnd);
+        List<TimeSheet> timeSheetList = GetTimeSheetFromPeriodAndProject(dateStart, dateEnd);
         if (timeSheetList.size() == 0) throw new CustomException(HttpStatus.NOT_FOUND, "За данный период не найдено Таймшитов");
 
         List<User> userList = userService.GetAll(); // Список всех пользователей

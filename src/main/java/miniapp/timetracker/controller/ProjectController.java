@@ -2,12 +2,12 @@ package miniapp.timetracker.controller;
 
 import miniapp.timetracker.model.Project;
 import miniapp.timetracker.model.TimeSheet;
-import miniapp.timetracker.model.contracts.ProjectDatePeriodRequest;
-import miniapp.timetracker.model.contracts.JobTimeOnProject;
-import miniapp.timetracker.model.contracts.Message;
-import miniapp.timetracker.model.contracts.ProjectTime;
+import miniapp.timetracker.model.User;
+import miniapp.timetracker.model.UserProject;
+import miniapp.timetracker.model.contracts.*;
 import miniapp.timetracker.service.ProjectsService;
 import miniapp.timetracker.service.TimeSheetService;
+import miniapp.timetracker.service.UserProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,32 +27,25 @@ public class ProjectController {
     private ProjectsService projectsService;
 
     @GetMapping("/project")
-    private List<Project> getAll(){
-        return projectsService.getAllProjects();
+    private ResponseEntity<Object> getAll(){
+        return ResponseEntity.status(HttpStatus.OK).body(projectsService.getAllProjects());
     }
 
-    // TODO: Доработать POST метода для Projects
+    @GetMapping("/project/{id}")
+    private ResponseEntity<Object> getById(@PathVariable UUID id){
+        return ResponseEntity.status(HttpStatus.OK).body(projectsService.getProject(id));
+    }
+
     @PostMapping("/project/{name}")
-    private Project add(@PathVariable String name){
-        Project project = new Project(UUID.randomUUID(), name);
-        return projectsService.saveProject(project);
+    private ResponseEntity<Object> saveProject(@PathVariable String name) {
+        return ResponseEntity.status(HttpStatus.OK).body(projectsService.saveProject(new Project(null, name)));
     }
 
-    // TODO Перенести логику на слой БЛ
     /** Получение общего времени на проекте за определенное время */
     @GetMapping("/project/time")
     @ResponseBody
     private ProjectTime getProjectTime(@RequestBody ProjectDatePeriodRequest request) {
-        List<TimeSheet> timeSheetList = timeSheetService.GetTimeSheetFromPeriodAndProject(request.getDateStart(), request.getDateEnd(), request.getProjectId());
-        ProjectTime projectTime = new ProjectTime("", 0.0);
-
-        projectTime.setProjectName(projectsService.getProjectName(request.getProjectId()));
-
-        for (TimeSheet timeSheet: timeSheetList) {
-            projectTime.setTime(projectTime.getTime() + timeSheet.getWorkTime());
-        }
-
-        return projectTime;
+        return timeSheetService.GetProjectWorkTimePeriod(request.getDateStart(), request.getDateEnd(), request.getProjectId());
     }
 
     // TODO Перенести логику на слой БЛ
@@ -86,5 +79,12 @@ public class ProjectController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(jobTimeOnProjects);
+    }
+
+    // TODO Перенести логику на слой БЛ
+    /** Получение времени по работнику понедельно */
+    @GetMapping("/project/employee")
+    private ResponseEntity<Object> getWorkTimeByEmployee(@RequestBody EmployeeStatisticRequestContract request) {
+        return ResponseEntity.status(HttpStatus.OK).body(projectsService.getWorkTimeOnProjectsByUser(request));
     }
 }

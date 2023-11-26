@@ -1,18 +1,18 @@
 package miniapp.timetracker.service;
 
 import miniapp.timetracker.model.Project;
-import miniapp.timetracker.model.User;
 import miniapp.timetracker.model.UserProject;
+import miniapp.timetracker.model.contracts.EmployeeStatisticRequestContract;
+import miniapp.timetracker.model.contracts.EmployeeStatisticResponseContract;
+import miniapp.timetracker.model.contracts.WeekWorkTime;
+import miniapp.timetracker.model.contracts.WeekWorkTimeInterface;
 import miniapp.timetracker.repository.ProjectRepository;
-import miniapp.timetracker.repository.TimeSheetRepository;
 import miniapp.timetracker.repository.UserProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class ProjectsImpl implements ProjectsService {
@@ -51,5 +51,20 @@ public class ProjectsImpl implements ProjectsService {
             projectList.add(userProject.getProject());
         }
         return projectList;
+    }
+
+    @Override
+    public EmployeeStatisticResponseContract getWorkTimeOnProjectsByUser(EmployeeStatisticRequestContract req) {
+        var currentDate = req.getMonthDate();
+        EmployeeStatisticResponseContract workTimeByProject = new EmployeeStatisticResponseContract();
+        workTimeByProject.setWorkWeeks(new ArrayList<>());
+        while (currentDate.isBefore(req.getMonthDate().plusMonths(3))) {
+            List<WeekWorkTimeInterface> queryResult = projectRepository.getWorkTimeByWeek(currentDate, currentDate.plusDays(7), req.getEmployeeID(), req.getProjectIDs()); //query()
+            for (WeekWorkTimeInterface w: queryResult) {
+              workTimeByProject.addWorkWeeks(new WeekWorkTime(w.getProjectName(), w.getWeekDate(), w.getWorkTime()));
+            }
+            currentDate = currentDate.plusDays(7);
+        }
+        return workTimeByProject;
     }
 }

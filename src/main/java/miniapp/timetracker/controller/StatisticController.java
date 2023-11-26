@@ -1,5 +1,6 @@
 package miniapp.timetracker.controller;
 
+import miniapp.timetracker.model.contracts.EmployeeStatisticRequestContract;
 import miniapp.timetracker.model.contracts.ProjectDatePeriodRequest;
 import miniapp.timetracker.service.TimeSheetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,5 +23,10 @@ public class StatisticController {
     @GetMapping("/project/all")
     public ResponseEntity<Object> getUserStatisticsAllProjects(@RequestBody ProjectDatePeriodRequest request){
         return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.getUserStatisticsAllProjects(request.getDateStart(),request.getDateEnd()));
+    }
+
+    @GetMapping("/employee")
+    public ResponseEntity<Object> getUserStatisticOnProjects(@RequestBody EmployeeStatisticRequestContract request){
+        return null;
     }
 }

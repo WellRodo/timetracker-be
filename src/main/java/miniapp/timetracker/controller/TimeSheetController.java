@@ -31,10 +31,8 @@ public class TimeSheetController {
     /** Получение таймшитов всех пользователей за определённую дату (Может РП-шник)*/
     @GetMapping("/day/{date}")
     private ResponseEntity<Object> getTimeSheetsByDate(@PathVariable LocalDate date) {
-        List<TimeSheet> result = timeSheetService.GetTimeSheetsByDate(date);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.GetTimeSheetsByDate(date));
     }
-
 //    /** Получение общего времени на проекте за определенное время */
 //    @GetMapping("/project/time")
 //    @ResponseBody
@@ -86,12 +84,10 @@ public class TimeSheetController {
 //
 //        return ResponseEntity.status(HttpStatus.OK).body(jobTimeOnProjects);
 //    }
-
     /** Добавление таймшитов на определённую дату */
     @PostMapping("/day")
     private ResponseEntity<Object> post(@RequestBody TimeSheetContract timeSheet){
-        TimeSheet result = timeSheetService.SaveTimeSheet(timeSheet);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.SaveTimeSheet(timeSheet));
     }
 
     /** Изменение таймшита */
@@ -108,11 +104,10 @@ public class TimeSheetController {
             return ResponseEntity.status(HttpStatus.OK).body(new Message("Завершено",HttpStatus.OK));
         }
         catch (Exception ex){
-            return ResponseEntity.status(HttpStatus.OK).body(new Message(ex.getMessage(),HttpStatus.NOT_FOUND));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(ex.getMessage(),HttpStatus.NOT_FOUND));
         }
 
     }
-
     /** Удаление таймшита */
     @DeleteMapping("/day/{timeSheetId}")
     private ResponseEntity<Object> deleteTimeSheet(@PathVariable UUID timeSheetId) {

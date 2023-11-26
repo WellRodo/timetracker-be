@@ -19,7 +19,10 @@ public class UserProject {
 
     public UserProject() {
     }
-
+    public UserProject(User user, Project project) {
+        this.user = user;
+        this.project = project;
+    }
     public UserProject(int id, User user, Project project) {
         Id = id;
         this.user = user;
