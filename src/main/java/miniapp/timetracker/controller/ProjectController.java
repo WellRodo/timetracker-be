@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 // TODO Поменять Dictionary на project
@@ -44,44 +45,16 @@ public class ProjectController {
     /** Получение общего времени на проекте за определенное время */
     @GetMapping("/project/time")
     @ResponseBody
-    private ProjectTime getProjectTime(@RequestBody ProjectDatePeriodRequest request) {
-        return timeSheetService.GetProjectWorkTimePeriod(request.getDateStart(), request.getDateEnd(), request.getProjectId());
+    private ProjectTime getProjectTime(@PathVariable LocalDate dateStart, @PathVariable LocalDate dateEnd, @PathVariable UUID projectId) {
+        return timeSheetService.GetProjectWorkTimePeriod(dateStart, dateEnd, projectId);
     }
 
-    // TODO Перенести логику на слой БЛ
     /** Получение времени по должностям на проекте за определенное время */
     @GetMapping("/project/job/time")
-    private ResponseEntity<Object> getJobTime(@RequestBody ProjectDatePeriodRequest request) {
-        List<TimeSheet> timeSheetList = timeSheetService.GetTimeSheetFromPeriodAndProject(request.getDateStart(), request.getDateEnd(), request.getProjectId());
-
-        if (timeSheetList.size() == 0) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message("Таймшиты не найдены",HttpStatus.NOT_FOUND));
-        }
-
-        Map<String , Double> jobTime = new HashMap<>();
-        for (TimeSheet timeSheet: timeSheetList) {
-
-            try {
-                String jobName = timeSheet.getUser().getJob().getName();
-                if(jobTime.containsKey(jobName))
-                    jobTime.put(jobName, jobTime.get(jobName) + timeSheet.getWorkTime());
-                else
-                    jobTime.put(jobName, timeSheet.getWorkTime());
-            }catch (Exception ex){
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Message(ex.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR));
-            }
-
-        }
-
-        List<JobTimeOnProject> jobTimeOnProjects = new ArrayList<>();
-        for(Map.Entry<String , Double> pair : jobTime.entrySet()){
-            jobTimeOnProjects.add(new JobTimeOnProject(pair.getKey(), pair.getValue()));
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(jobTimeOnProjects);
+    private ResponseEntity<Object> getJobTime(@PathVariable LocalDate dateStart, @PathVariable LocalDate dateEnd, @PathVariable UUID projectId) {
+        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.getJobTimeOnProject(dateStart, dateEnd, projectId));
     }
 
-    // TODO Перенести логику на слой БЛ
     /** Получение времени по работнику понедельно */
     @GetMapping("/project/employee")
     private ResponseEntity<Object> getWorkTimeByEmployee(@RequestBody EmployeeStatisticRequestContract request) {

@@ -9,12 +9,12 @@ import miniapp.timetracker.model.contracts.*;
 import miniapp.timetracker.repository.TimeSheetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 @Service
 public class TimeSheetImpl implements TimeSheetService {
     @Autowired
@@ -58,6 +58,7 @@ public class TimeSheetImpl implements TimeSheetService {
         return projectTime;
     }
 
+
     public List<TimeSheet> GetTimeSheetFromPeriodAndProject(LocalDate startDate, LocalDate endDate) {
         return timeSheetRepo.searchTimeSheetsByDateBetween(startDate, endDate);
     }
@@ -66,8 +67,6 @@ public class TimeSheetImpl implements TimeSheetService {
     public List<TimeSheet> GetTimeSheetsByDate(LocalDate date) {
         List<TimeSheet> timeSheetList = timeSheetRepo.searchTimeSheetsByDateEquals(date);
         return timeSheetList;
-//        if(timeSheetList.isEmpty()) throw new CustomException(HttpStatus.NOT_FOUND, "Таймшиты не найдены");
-//        else return timeSheetRepo.searchTimeSheetsByDateEquals(date);
     }
 
     @Override
@@ -99,7 +98,7 @@ public class TimeSheetImpl implements TimeSheetService {
     @Override
     public List<UserStatistics> getUserStatisticsByProject(LocalDate dateStart, LocalDate dateEnd, UUID projectId) {
         List<TimeSheet> timeSheetList = GetTimeSheetFromPeriodAndProject(dateStart, dateEnd, projectId);
-        if (timeSheetList.size() == 0) throw new CustomException(HttpStatus.NOT_FOUND, "За данный период не найдено Таймшитов");
+        if (timeSheetList.size() == 0) throw new CustomException(HttpStatus.OK, "За данный период не найдено Таймшитов");
         List<User> userList = userService.GetAll(); // Список всех пользователей
         List<UserStatistics> userStatisticsList = new ArrayList<>(); //Возвращаемый список
 
@@ -131,7 +130,7 @@ public class TimeSheetImpl implements TimeSheetService {
     public List<UserStatistics> getUserStatisticsAllProjects(LocalDate dateStart, LocalDate dateEnd) {
 
         List<TimeSheet> timeSheetList = GetTimeSheetFromPeriodAndProject(dateStart, dateEnd);
-        if (timeSheetList.size() == 0) throw new CustomException(HttpStatus.NOT_FOUND, "За данный период не найдено Таймшитов");
+        if (timeSheetList.size() == 0) throw new CustomException(HttpStatus.OK, "За данный период не найдено Таймшитов");
 
         List<User> userList = userService.GetAll(); // Список всех пользователей
         List<UserStatistics> userStatisticsList = new ArrayList<>(); //Возвращаемый список
@@ -157,5 +156,36 @@ public class TimeSheetImpl implements TimeSheetService {
         }catch (Exception ex){
             throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         } return userStatisticsList;
+    }
+
+    @Override
+    public List<JobTimeOnProject> getJobTimeOnProject(LocalDate dateStart, LocalDate dateEnd, UUID projectId) {
+        List<TimeSheet> timeSheetList = GetTimeSheetFromPeriodAndProject(dateStart, dateEnd, projectId);
+        if (timeSheetList.size() == 0) {
+            throw new CustomException(HttpStatus.OK, "За данный период не найдено Таймшитов");
+        }
+        Map<String, Double> jobTime = getStringDoubleMap(timeSheetList);
+        List<JobTimeOnProject> jobTimeOnProjects = new ArrayList<>();
+        for(Map.Entry<String , Double> pair : jobTime.entrySet()){
+            jobTimeOnProjects.add(new JobTimeOnProject(pair.getKey(), pair.getValue()));
+        }
+        return  jobTimeOnProjects;
+    }
+
+    private static Map<String, Double> getStringDoubleMap(List<TimeSheet> timeSheetList) {
+        Map<String , Double> jobTime = new HashMap<>();
+        for (TimeSheet timeSheet: timeSheetList) {
+            try {
+                String jobName = timeSheet.getUser().getJob().getName();
+                if(jobTime.containsKey(jobName))
+                    jobTime.put(jobName, jobTime.get(jobName) + timeSheet.getWorkTime());
+                else
+                    jobTime.put(jobName, timeSheet.getWorkTime());
+            }catch (Exception ex){
+                throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            }
+
+        }
+        return jobTime;
     }
 }

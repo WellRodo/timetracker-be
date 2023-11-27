@@ -2,10 +2,7 @@ package miniapp.timetracker.service;
 
 import miniapp.timetracker.model.Project;
 import miniapp.timetracker.model.TimeSheet;
-import miniapp.timetracker.model.contracts.FinishTimeSheetsContract;
-import miniapp.timetracker.model.contracts.ProjectTime;
-import miniapp.timetracker.model.contracts.TimeSheetContract;
-import miniapp.timetracker.model.contracts.UserStatistics;
+import miniapp.timetracker.model.contracts.*;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
@@ -22,4 +19,5 @@ public interface TimeSheetService {
     void FinishTimeSheets(FinishTimeSheetsContract timeSheets);
     List<UserStatistics> getUserStatisticsByProject(LocalDate dateStart, LocalDate dateEnd, UUID projectId);
     List<UserStatistics> getUserStatisticsAllProjects(LocalDate dateStart, LocalDate dateEnd);
+    List<JobTimeOnProject> getJobTimeOnProject(LocalDate dateStart, LocalDate dateEnd, UUID projectId);
 }

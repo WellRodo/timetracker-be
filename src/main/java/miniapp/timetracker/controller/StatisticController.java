@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/statistic")
 @CrossOrigin
@@ -16,13 +19,13 @@ public class StatisticController {
     private TimeSheetService timeSheetService;
 
     @GetMapping("/project")
-    public ResponseEntity<Object> getUserStatisticsByProject(@RequestBody ProjectDatePeriodRequest request) {
-        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.getUserStatisticsByProject(request.getDateStart(),request.getDateEnd(),request.getProjectId()));
+    public ResponseEntity<Object> getUserStatisticsByProject(@PathVariable LocalDate dateStart, @PathVariable LocalDate dateEnd, @PathVariable UUID projectId) {
+        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.getUserStatisticsByProject(dateStart, dateEnd, projectId));
     }
 
     @GetMapping("/project/all")
-    public ResponseEntity<Object> getUserStatisticsAllProjects(@RequestBody ProjectDatePeriodRequest request){
-        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.getUserStatisticsAllProjects(request.getDateStart(),request.getDateEnd()));
+    public ResponseEntity<Object> getUserStatisticsAllProjects(@PathVariable LocalDate dateStart, @PathVariable LocalDate dateEnd){
+        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.getUserStatisticsAllProjects(dateStart, dateEnd));
     }
 
     @GetMapping("/employee")
