@@ -18,13 +18,13 @@ public class StatisticController {
     @Autowired
     private TimeSheetService timeSheetService;
 
-    @GetMapping("/project")
-    public ResponseEntity<Object> getUserStatisticsByProject(@PathVariable LocalDate dateStart, @PathVariable LocalDate dateEnd, @PathVariable UUID projectId) {
+    @GetMapping("/project/{dateStart}/{dateEnd}/{projectId}")
+    public ResponseEntity<Object> getUserStatisticsByProject(@PathVariable("dateStart") LocalDate dateStart, @PathVariable("dateEnd") LocalDate dateEnd, @PathVariable("projectId") UUID projectId) {
         return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.getUserStatisticsByProject(dateStart, dateEnd, projectId));
     }
 
-    @GetMapping("/project/all")
-    public ResponseEntity<Object> getUserStatisticsAllProjects(@PathVariable LocalDate dateStart, @PathVariable LocalDate dateEnd){
+    @GetMapping("/project/all/{dateStart}/{dateEnd}")
+    public ResponseEntity<Object> getUserStatisticsAllProjects(@PathVariable("dateStart") LocalDate dateStart, @PathVariable("dateEnd") LocalDate dateEnd){
         return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.getUserStatisticsAllProjects(dateStart, dateEnd));
     }
 

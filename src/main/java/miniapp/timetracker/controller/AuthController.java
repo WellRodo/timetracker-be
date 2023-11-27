@@ -3,6 +3,7 @@ package miniapp.timetracker.controller;
 import miniapp.timetracker.model.JwtRequest;
 import miniapp.timetracker.model.JwtResponse;
 import miniapp.timetracker.model.contracts.CustomException;
+import miniapp.timetracker.model.contracts.CustomUserDetails;
 import miniapp.timetracker.model.contracts.Message;
 import miniapp.timetracker.service.JwtTokenUtils;
 import miniapp.timetracker.service.UserAuthService;
@@ -29,7 +30,7 @@ public class AuthController {
     public ResponseEntity<Object> createAuthToken(@RequestBody JwtRequest authRequest){
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-            UserDetails userDetails = userAuthService.loadUserByUsername(authRequest.getUsername());
+            CustomUserDetails userDetails = userAuthService.loadUserByUsername(authRequest.getUsername());
             String token = jwtTokenUtils.generateToken(userDetails);
             return ResponseEntity.ok(new JwtResponse(token));
         }catch (BadCredentialsException e){

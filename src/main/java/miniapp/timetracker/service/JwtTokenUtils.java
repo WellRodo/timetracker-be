@@ -3,6 +3,7 @@ package miniapp.timetracker.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import miniapp.timetracker.model.contracts.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,12 +22,13 @@ public class JwtTokenUtils {
     @Value("${jwt.lifetime}")
     private Duration jwtLifetime;
 
-    public String generateToken(UserDetails userDetails){
+    public String generateToken(CustomUserDetails userDetails){
         Map<String, Object> claims = new HashMap<>();
         List<String> roleList = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         claims.put("roles", roleList);
+        claims.put("userId", userDetails.getUserId());
 
         Date issuedDate = new Date();
         Date expiredDate = new Date(issuedDate.getTime() + jwtLifetime.toMillis());
@@ -47,6 +49,10 @@ public class JwtTokenUtils {
 
     public List<String> getRoles(String token){
         return (List<String>) getAllClaimsFromToken(token).get("roles");
+    }
+
+    public String getUserId(String token){
+        return (String) getAllClaimsFromToken(token.substring(7)).get("userId");
     }
 
     private Claims getAllClaimsFromToken(String token){

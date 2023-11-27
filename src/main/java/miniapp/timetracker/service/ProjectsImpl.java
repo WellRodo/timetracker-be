@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectsImpl implements ProjectsService {
@@ -23,8 +24,9 @@ public class ProjectsImpl implements ProjectsService {
     private UserProjectRepository userProjectRepository;
 
     @Override
-    public List<Project> getAllProjects(){
-        return projectRepository.findAll();
+    public List<Project> getAllProjects(String userId){
+        List<UserProject> userProjectList= userProjectRepository.searchUserProjectsByUserIdEquals(UUID.fromString(userId));
+        return new ArrayList<Project>(userProjectList.stream().map(c -> c.getProject()).collect(Collectors.toList()));
     }
 
     @Override
