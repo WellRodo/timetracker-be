@@ -11,6 +11,8 @@ import java.util.UUID;
 public interface ProjectsService {
 
     public Project saveProject(Project project);
+    public Project updateProject(Project project);
+    public void deleteProject(Project project);
     public List<Project> getAllProjects(String userId);
     public Project getProject(UUID projectId);
     public String getProjectName(UUID projectId);

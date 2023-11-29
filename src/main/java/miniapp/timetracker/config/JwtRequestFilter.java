@@ -7,14 +7,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import miniapp.timetracker.model.contracts.CustomException;
 import miniapp.timetracker.service.JwtTokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if(authHeader != null && authHeader.startsWith("Bearer ")){
             jwt = authHeader.substring(7);
+            if(jwtTokenUtils.isTokenExpired(jwt)) throw new CustomException(HttpStatus.I_AM_A_TEAPOT, "Срок жизни токена истек");
             try{
                 username = jwtTokenUtils.getUsername(jwt);
             }catch (SignatureException e){
@@ -40,6 +42,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 logger.debug("Другая ошибка");
             }
         }
+
+
 
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(

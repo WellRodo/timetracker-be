@@ -40,6 +40,16 @@ public class ProjectsImpl implements ProjectsService {
     }
 
     @Override
+    public Project updateProject(Project project) {
+        return projectRepository.save(project);
+    }
+
+    @Override
+    public void deleteProject(Project project) {
+        projectRepository.delete(project);
+    }
+
+    @Override
     public String getProjectName(UUID projectId){
         Optional<Project> project = projectRepository.findById(projectId);
         return project.get().getName();
