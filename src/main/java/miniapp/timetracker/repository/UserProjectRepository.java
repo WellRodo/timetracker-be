@@ -15,6 +15,7 @@ import java.util.UUID;
 
 public interface UserProjectRepository extends JpaRepository<UserProject, UUID> {
     List<UserProject> searchUserProjectsByUserIdEquals(UUID userId);
+    List<UserProject> searchUserProjectsByProjectIdEquals(UUID projectId);
     List<UserProject> searchUserProjectsByUserIdAndProjectIdEquals(UUID userId, UUID projectId);
     @Transactional
     @Modifying(clearAutomatically = true)

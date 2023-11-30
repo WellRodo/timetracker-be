@@ -45,4 +45,10 @@ public class UserProjectImpl implements UserProjectService{
         userProjectRepo.deleteUsersFromProject(projectContract.getProject().getId(), uuidList);
 
     }
+
+    @Override
+    public List<User> getUsersFromProject(UUID projectId) {
+        List<UserProject> userProjectList = userProjectRepo.searchUserProjectsByProjectIdEquals(projectId);
+        return userProjectList.stream().map(c -> c.getUser()).collect(Collectors.toList());
+    }
 }

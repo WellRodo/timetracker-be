@@ -35,8 +35,13 @@ public class ProjectController {
     }
 
     @GetMapping("/project/{id}")
-    private ResponseEntity<Object> getById(@PathVariable UUID id){
+    private ResponseEntity<Object> getById(@PathVariable("id") UUID id){
         return ResponseEntity.status(HttpStatus.OK).body(projectsService.getProject(id));
+    }
+
+    @GetMapping("/project/{id}/usersList")
+    private ResponseEntity<Object> getUsersFromProject(@PathVariable("id") UUID projectId){
+        return ResponseEntity.status(HttpStatus.OK).body(userProjectService.getUsersFromProject(projectId));
     }
 
     @PostMapping("/project")
