@@ -61,6 +61,11 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body(projectsService.updateProject(projectContract.getProject()));
     }
 
+    @DeleteMapping("/project/{id}")
+    private void deleteProject(@PathVariable("id") UUID projectId){
+        projectsService.deleteProject(projectsService.getProject(projectId));
+    }
+
     /** Получение общего времени на проекте за определенное время */
     @GetMapping("/project/time/{dateStart}/{dateEnd}/{projectId}")
     @ResponseBody

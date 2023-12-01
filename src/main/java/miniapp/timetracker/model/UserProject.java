@@ -1,6 +1,8 @@
 package miniapp.timetracker.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.UUID;
 
@@ -15,6 +17,7 @@ public class UserProject {
     User user;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="project_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Project project;
 
     public UserProject() {
