@@ -25,11 +25,11 @@ public class TimeSheetImpl implements TimeSheetService {
     UserService userService;
 
     @Override
-    public TimeSheet SaveTimeSheet(TimeSheetContract timeSheetContract) {
+    public TimeSheet SaveTimeSheet(TimeSheetContract timeSheetContract, UUID userId) {
         TimeSheet timeSheet = new TimeSheet(
                 UUID.randomUUID(),
                 projectsService.getProject(timeSheetContract.getProjectId()),
-                userService.GetUser(timeSheetContract.getUserId()),
+                userService.GetUser(userId),
                 timeSheetContract.getWorkTime(),
                 timeSheetContract.getDescription(),
                 timeSheetContract.getDate(),
@@ -70,11 +70,11 @@ public class TimeSheetImpl implements TimeSheetService {
     }
 
     @Override
-    public TimeSheet UpdateTimeSheet(TimeSheetContract timeSheet, UUID timeSheetId) {
+    public TimeSheet UpdateTimeSheet(TimeSheetContract timeSheet, UUID timeSheetId, UUID userID) {
         TimeSheet updTimeSheet = new TimeSheet(
                 timeSheetId,
                 projectsService.getProject(timeSheet.getProjectId()),
-                userService.GetUser(timeSheet.getUserId()),
+                userService.GetUser(userID),
                 timeSheet.getWorkTime(),
                 timeSheet.getDescription(),
                 timeSheet.getDate(),

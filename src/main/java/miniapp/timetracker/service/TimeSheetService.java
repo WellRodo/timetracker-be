@@ -12,10 +12,10 @@ import java.util.UUID;
 public interface TimeSheetService {
     List<TimeSheet> GetTimeSheetFromPeriodAndProject(LocalDate startDate, LocalDate endDate, UUID projectId);
     ProjectTime GetProjectWorkTimePeriod(LocalDate startDate, LocalDate endDate, UUID projectId);
-    TimeSheet SaveTimeSheet(TimeSheetContract timeSheet);
+    TimeSheet SaveTimeSheet(TimeSheetContract timeSheet, UUID userId);
     List<TimeSheet> GetTimeSheetsByDate(LocalDate date);
     TimeSheet DeleteTimeSheet(UUID timeSheetId);
-    TimeSheet UpdateTimeSheet(TimeSheetContract timeSheet, UUID timeSheetId);
+    TimeSheet UpdateTimeSheet(TimeSheetContract timeSheet, UUID timeSheetId, UUID userID);
     void FinishTimeSheets(FinishTimeSheetsContract timeSheets);
     List<UserStatistics> getUserStatisticsByProject(LocalDate dateStart, LocalDate dateEnd, UUID projectId);
     List<UserStatistics> getUserStatisticsAllProjects(LocalDate dateStart, LocalDate dateEnd);

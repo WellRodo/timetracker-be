@@ -4,6 +4,7 @@ import miniapp.timetracker.model.contracts.FinishTimeSheetsContract;
 import miniapp.timetracker.model.contracts.TimeSheetContract;
 import miniapp.timetracker.model.*;
 import miniapp.timetracker.model.contracts.*;
+import miniapp.timetracker.service.JwtTokenUtils;
 import miniapp.timetracker.service.ProjectsService;
 import miniapp.timetracker.service.TimeSheetService;
 import org.hibernate.bytecode.internal.bytebuddy.BytecodeProviderImpl;
@@ -23,6 +24,8 @@ import java.util.*;
 public class TimeSheetController {
     @Autowired
     private TimeSheetService timeSheetService;
+    @Autowired
+    private JwtTokenUtils jwtTokenUtils;
 
 //    ..@Autowired
 //    private ProjectsService projectsService;
@@ -86,14 +89,14 @@ public class TimeSheetController {
 //    }
     /** Добавление таймшитов на определённую дату */
     @PostMapping("/day")
-    private ResponseEntity<Object> post(@RequestBody TimeSheetContract timeSheet){
-        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.SaveTimeSheet(timeSheet));
+    private ResponseEntity<Object> post(@RequestHeader("Authorization") String token, @RequestBody TimeSheetContract timeSheet){
+        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.SaveTimeSheet(timeSheet, UUID.fromString(jwtTokenUtils.getUserId(token))));
     }
 
     /** Изменение таймшита */
     @PutMapping("/day/{timeSheetId}")
-    private ResponseEntity<Object> putTimeSheet(@RequestBody TimeSheetContract timeSheet, @PathVariable UUID timeSheetId) {
-        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.UpdateTimeSheet(timeSheet, timeSheetId));
+    private ResponseEntity<Object> putTimeSheet(@RequestHeader("Authorization") String token, @RequestBody TimeSheetContract timeSheet, @PathVariable UUID timeSheetId) {
+        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.UpdateTimeSheet(timeSheet, timeSheetId, UUID.fromString(jwtTokenUtils.getUserId(token))));
     }
 
     /** Изменение статуса таймшита */
