@@ -9,8 +9,12 @@ import java.util.UUID;
 
 @Service
 public class JobImpl implements  JobService{
-    @Autowired
-    private JobRepository jobRepository;
+    private final JobRepository jobRepository;
+
+    public JobImpl(JobRepository jobRepository) {
+        this.jobRepository = jobRepository;
+    }
+
     @Override
     public Job GetJob(UUID id){
         return jobRepository.findById(id).get();

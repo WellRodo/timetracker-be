@@ -13,9 +13,9 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, UUID> {
+
     @Query(value = "SELECT " +
             "tp.name AS projectName, :startDate AS weekDate, (SELECT sum(work_time) from tt_time_sheet tts " +
             "WHERE tts.project_id = tp.id AND tts.is_finished = true " +
