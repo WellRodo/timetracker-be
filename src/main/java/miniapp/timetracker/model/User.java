@@ -15,7 +15,7 @@ public class User {
     private String name;
 
     @ManyToOne(fetch= FetchType.EAGER)
-    @JoinColumn(name="job_id")
+    @JoinColumn(name="job_id", nullable = false)
     private Job job;
     public User() {}
 

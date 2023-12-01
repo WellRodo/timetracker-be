@@ -1,10 +1,9 @@
 package miniapp.timetracker.controller;
 
-import miniapp.timetracker.model.JwtRequest;
-import miniapp.timetracker.model.JwtResponse;
+import miniapp.timetracker.model.contracts.JwtRequest;
+import miniapp.timetracker.model.contracts.JwtResponse;
 import miniapp.timetracker.model.contracts.CustomException;
 import miniapp.timetracker.model.contracts.CustomUserDetails;
-import miniapp.timetracker.model.contracts.Message;
 import miniapp.timetracker.service.JwtTokenUtils;
 import miniapp.timetracker.service.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,7 +30,7 @@ public class AuthController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
             CustomUserDetails userDetails = userAuthService.loadUserByUsername(authRequest.getUsername());
             String token = jwtTokenUtils.generateToken(userDetails);
-            return ResponseEntity.ok(new JwtResponse(token));
+            return ResponseEntity.ok(new JwtResponse(token, userDetails.getUserId()));
         }catch (BadCredentialsException e){
             throw new CustomException(HttpStatus.UNAUTHORIZED, "Неправильный логин или пароль");
         }

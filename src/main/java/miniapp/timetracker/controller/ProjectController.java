@@ -75,7 +75,7 @@ public class ProjectController {
     }
 
     /** Получение времени по работнику понедельно */
-    @GetMapping("/project/employee")
+    @PostMapping("/project/employee")
     private ResponseEntity<Object> getWorkTimeByEmployee(@RequestBody EmployeeStatisticRequestContract request) {
         return ResponseEntity.status(HttpStatus.OK).body(projectsService.getWorkTimeOnProjectsByUser(request));
     }

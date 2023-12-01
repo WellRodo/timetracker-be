@@ -1,4 +1,4 @@
-package miniapp.timetracker.model;
+package miniapp.timetracker.model.contracts;
 
 public class JwtRequest {
     private String username;
