@@ -6,14 +6,14 @@ import java.util.UUID;
 
 public class JwtResponse {
     private String token;
-    private UUID user;
+    private User user;
 
 
 
     public JwtResponse() {
     }
 
-    public JwtResponse(String token, UUID user) {
+    public JwtResponse(String token, User user) {
         this.token = token;
         this.user = user;
     }
@@ -26,11 +26,11 @@ public class JwtResponse {
         this.token = token;
     }
 
-    public UUID getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(UUID user) {
+    public void setUser(User user) {
         this.user = user;
     }
 }
