@@ -33,7 +33,7 @@ public class AuthController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
             CustomUserDetails userDetails = userAuthService.loadUserByUsername(authRequest.getUsername());
             String token = jwtTokenUtils.generateToken(userDetails);
-            return ResponseEntity.ok(new JwtResponse(token, userService.GetUser(userDetails.getUserId())));
+            return ResponseEntity.ok(new JwtResponse(token, userDetails.getUserId(), userAuthService.findByLogin(userDetails.getUsername()).get().getManagerRole()));
         }catch (BadCredentialsException e){
             throw new CustomException(HttpStatus.UNAUTHORIZED, "Неправильный логин или пароль");
         }

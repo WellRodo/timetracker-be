@@ -6,16 +6,18 @@ import java.util.UUID;
 
 public class JwtResponse {
     private String token;
-    private User user;
+    private UUID user;
+    private Boolean isManager;
 
 
 
     public JwtResponse() {
     }
 
-    public JwtResponse(String token, User user) {
+    public JwtResponse(String token, UUID user, Boolean isManager) {
         this.token = token;
         this.user = user;
+        this.isManager = isManager;
     }
 
     public String getToken() {
@@ -26,11 +28,19 @@ public class JwtResponse {
         this.token = token;
     }
 
-    public User getUser() {
+    public UUID getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UUID user) {
         this.user = user;
+    }
+
+    public Boolean getManager() {
+        return isManager;
+    }
+
+    public void setManager(Boolean manager) {
+        isManager = manager;
     }
 }
