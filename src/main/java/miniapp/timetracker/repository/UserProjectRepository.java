@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserProjectRepository extends JpaRepository<UserProject, UUID> {
+    public static final UUID emptyProjectUUID = UUID.fromString("82a8ed50-906b-11ee-b9d1-0242ac120004");
+
     List<UserProject> searchUserProjectsByUserIdEquals(UUID userId);
     List<UserProject> searchUserProjectsByProjectIdEquals(UUID projectId);
     List<UserProject> searchUserProjectsByUserIdAndProjectIdEquals(UUID userId, UUID projectId);

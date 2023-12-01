@@ -1,34 +1,26 @@
 package miniapp.timetracker.model.contracts;
 
 
+import miniapp.timetracker.model.User;
+
 import java.util.UUID;
 
 public class UserContract {
 
-    private String name;
-    private UUID jobId;
+    private User user;
 
     public UserContract() {
     }
 
-    public UserContract(String name, UUID jobId) {
-        this.name = name;
-        this.jobId = jobId;
+    public UserContract(User user) {
+        this.user = user;
     }
 
-    public String getName() {
-        return name;
+    public User getUser() {
+        return user;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public UUID getJobId() {
-        return jobId;
-    }
-
-    public void setJobId(UUID jobId) {
-        this.jobId = jobId;
+    public void setUser(User user) {
+        this.user = user;
     }
 }
