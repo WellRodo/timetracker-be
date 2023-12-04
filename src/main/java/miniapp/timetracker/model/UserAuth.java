@@ -11,7 +11,6 @@ public class UserAuth {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    @Column(nullable = false)
     private String password;
     @Column(nullable = false)
     private String login;
