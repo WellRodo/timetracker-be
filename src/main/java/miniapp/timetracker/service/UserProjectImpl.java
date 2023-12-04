@@ -21,7 +21,7 @@ public class UserProjectImpl implements UserProjectService{
 
     @Override
     public UserProject addUserProject(UUID userId, Project project) {
-        User user = userService.GetUser(userId);
+        User user = userService.getUser(userId);
         return userProjectRepo.save(new UserProject(user, project));
     }
 

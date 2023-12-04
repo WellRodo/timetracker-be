@@ -9,7 +9,6 @@ import miniapp.timetracker.model.contracts.*;
 import miniapp.timetracker.repository.TimeSheetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -29,7 +28,7 @@ public class TimeSheetImpl implements TimeSheetService {
         TimeSheet timeSheet = new TimeSheet(
                 UUID.randomUUID(),
                 projectsService.getProject(timeSheetContract.getProjectId()),
-                userService.GetUser(userId),
+                userService.getUser(userId),
                 timeSheetContract.getWorkTime(),
                 timeSheetContract.getDescription(),
                 timeSheetContract.getDate(),
@@ -74,7 +73,7 @@ public class TimeSheetImpl implements TimeSheetService {
         TimeSheet updTimeSheet = new TimeSheet(
                 timeSheetId,
                 projectsService.getProject(timeSheet.getProjectId()),
-                userService.GetUser(userID),
+                userService.getUser(userID),
                 timeSheet.getWorkTime(),
                 timeSheet.getDescription(),
                 timeSheet.getDate(),
@@ -99,7 +98,7 @@ public class TimeSheetImpl implements TimeSheetService {
     public List<UserStatistics> getUserStatisticsByProject(LocalDate dateStart, LocalDate dateEnd, UUID projectId) {
         List<TimeSheet> timeSheetList = GetTimeSheetFromPeriodAndProject(dateStart, dateEnd, projectId);
         if (timeSheetList.size() == 0) throw new CustomException(HttpStatus.OK, "За данный период не найдено Таймшитов");
-        List<User> userList = userService.GetAll(); // Список всех пользователей
+        List<User> userList = userService.getAll(); // Список всех пользователей
         List<UserStatistics> userStatisticsList = new ArrayList<>(); //Возвращаемый список
 
         int i = 0;
@@ -132,7 +131,7 @@ public class TimeSheetImpl implements TimeSheetService {
         List<TimeSheet> timeSheetList = GetTimeSheetFromPeriodAndProject(dateStart, dateEnd);
         if (timeSheetList.size() == 0) throw new CustomException(HttpStatus.OK, "За данный период не найдено Таймшитов");
 
-        List<User> userList = userService.GetAll(); // Список всех пользователей
+        List<User> userList = userService.getAll(); // Список всех пользователей
         List<UserStatistics> userStatisticsList = new ArrayList<>(); //Возвращаемый список
 
         try {

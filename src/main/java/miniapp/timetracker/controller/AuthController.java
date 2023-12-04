@@ -1,5 +1,6 @@
 package miniapp.timetracker.controller;
 
+import miniapp.timetracker.model.UserAuth;
 import miniapp.timetracker.model.contracts.JwtRequest;
 import miniapp.timetracker.model.contracts.JwtResponse;
 import miniapp.timetracker.model.contracts.CustomException;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.memory.UserAttribute;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,9 +35,13 @@ public class AuthController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
             CustomUserDetails userDetails = userAuthService.loadUserByUsername(authRequest.getUsername());
             String token = jwtTokenUtils.generateToken(userDetails);
-            return ResponseEntity.ok(new JwtResponse(token, userDetails.getUserId(), userAuthService.findByLogin(userDetails.getUsername()).get().getManagerRole()));
-        }catch (BadCredentialsException e){
+            UserAuth userAuth = userAuthService.findByLogin(userDetails.getUsername()).get();
+            if (userAuth.getUser().getIsActive() == false) { throw new CustomException(HttpStatus.UNAUTHORIZED, ("Попытка войти в удаленный аккаунт"));}
+            return ResponseEntity.ok(new JwtResponse(token, userDetails.getUserId(), userAuth.getManagerRole()));
+        } catch (BadCredentialsException e){
             throw new CustomException(HttpStatus.UNAUTHORIZED, "Неправильный логин или пароль");
+        } catch (CustomException e){
+            throw e;
         }
     }
 

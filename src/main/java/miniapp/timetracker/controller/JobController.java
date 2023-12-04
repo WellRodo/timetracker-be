@@ -17,7 +17,7 @@ public class JobController {
     @Autowired
     private JobService jobService;
     @GetMapping("/job/all")
-    private ResponseEntity<Object> getAll(@RequestHeader("Authorization") String token) {
+    private ResponseEntity<Object> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(jobService.getAll());
     }
 
