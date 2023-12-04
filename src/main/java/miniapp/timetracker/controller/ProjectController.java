@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.*;
 
-// TODO Поменять Dictionary на project
 @RestController
 @RequestMapping("/dictionary")
 @CrossOrigin
@@ -29,9 +28,14 @@ public class ProjectController {
     @Autowired
     private UserProjectService userProjectService;
 
-    @GetMapping("/project")
-    private ResponseEntity<Object> getAll(@RequestHeader("Authorization") String token){
+    @GetMapping("/project/all")
+    private ResponseEntity<Object> getAll(@RequestHeader("Authorization") String token) {
         return ResponseEntity.status(HttpStatus.OK).body(projectsService.getAllProjects(jwtTokenUtils.getUserId(token)));
+    }
+
+    @GetMapping("/project/all/{isActive}")
+    private ResponseEntity<Object> getAll(@RequestHeader("Authorization") String token, @PathVariable("isActive") Boolean isActive) {
+        return ResponseEntity.status(HttpStatus.OK).body(projectsService.getAllProjectsWithActive(jwtTokenUtils.getUserId(token), isActive));
     }
 
     @GetMapping("/project/{id}")
@@ -46,7 +50,7 @@ public class ProjectController {
 
     @PostMapping("/project")
     private ResponseEntity<Object> saveNewProject(@RequestHeader("Authorization") String token, @RequestBody ProjectContract projectContract)  {
-        Project project = new Project(UUID.randomUUID(), projectContract.getProject().getName());
+        Project project = new Project(UUID.randomUUID(), projectContract.getProject().getName(), true);
         projectsService.saveProject(project);
         userProjectService.addUserProject(UUID.fromString(jwtTokenUtils.getUserId(token)),project);
         projectContract.setProject(project);
@@ -56,7 +60,7 @@ public class ProjectController {
 
     @PutMapping("/project")
     private ResponseEntity<Object> updateProject(@RequestHeader("Authorization") String token, @RequestBody ProjectContract projectContract)  {
-        projectContract.getUserList().add(new User(UUID.fromString(jwtTokenUtils.getUserId(token)), "", null));
+        projectContract.getUserList().add(new User(UUID.fromString(jwtTokenUtils.getUserId(token)), "", null, true));
         userProjectService.updateUserOnProject(projectContract);
         return ResponseEntity.status(HttpStatus.OK).body(projectsService.updateProject(projectContract.getProject()));
     }

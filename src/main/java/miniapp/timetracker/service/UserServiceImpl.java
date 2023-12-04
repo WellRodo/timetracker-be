@@ -5,6 +5,7 @@ import miniapp.timetracker.model.User;
 import miniapp.timetracker.model.UserProject;
 import miniapp.timetracker.model.contracts.UserContract;
 import miniapp.timetracker.repository.JobRepository;
+import miniapp.timetracker.repository.UserAuthRepository;
 import miniapp.timetracker.repository.UserProjectRepository;
 import miniapp.timetracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private UserAuthRepository userAuthRepository;
+
+    @Autowired
     private UserProjectRepository userProjectRepository;
 
     @Autowired
@@ -27,9 +31,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User SaveUser(UserContract userContract) {
-        userContract.setUser(userRepository.save(userContract.getUser()));
-        userProjectRepository.save(new UserProject(userContract.getUser(), new Project(userProjectRepository.emptyProjectUUID, "Простой")));
-        return userContract.getUser();
+        var userAuth = userAuthRepository.save(userContract.getUserAuth());
+        userProjectRepository.save(new UserProject(userAuth.getUser(), new Project(userProjectRepository.emptyProjectUUID, "Простой", true)));
+        return userAuth.getUser();
     }
 
     @Override

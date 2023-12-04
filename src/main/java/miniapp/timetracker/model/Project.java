@@ -11,13 +11,14 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String name;
-
+    private boolean isActive;
     public Project() {
     }
 
-    public Project(UUID id, String name) {
+    public Project(UUID id, String name, boolean isActive) {
         this.id = id;
         this.name = name;
+        this.isActive = isActive;
     }
 
     public UUID getId() {
@@ -28,6 +29,8 @@ public class Project {
         return name;
     }
 
+    public boolean isActive() { return isActive; }
+
     public void setId(UUID id) {
         this.id = id;
     }
@@ -35,4 +38,6 @@ public class Project {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setActive(boolean active) { isActive = active; }
 }

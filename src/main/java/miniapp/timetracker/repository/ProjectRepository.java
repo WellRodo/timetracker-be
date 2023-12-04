@@ -27,4 +27,6 @@ public interface ProjectRepository extends JpaRepository<Project, UUID> {
             "WHERE user_id = :employee_id " +
             "AND project_id IN (:project_ids))", nativeQuery = true)
     List<WeekWorkTimeInterface> getWorkTimeByWeek(@Param("startDate")LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("employee_id") UUID employeeID, @Param("project_ids") List<UUID> projectIDs );
+
+    Project findByIdEqualsAndIsActiveTrue(UUID id);
 }

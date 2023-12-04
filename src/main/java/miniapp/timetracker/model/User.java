@@ -2,6 +2,7 @@ package miniapp.timetracker.model;
 
 import jakarta.persistence.*;
 import lombok.Generated;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.UUID;
 
@@ -13,16 +14,18 @@ public class User {
     private UUID id;
     @Column(nullable = false)
     private String name;
-
+    @ColumnDefault("true")
+    private boolean isActive;
     @ManyToOne(fetch= FetchType.EAGER)
     @JoinColumn(name="job_id", nullable = false)
     private Job job;
     public User() {}
 
-    public User(UUID id, String name, Job job) {
+    public User(UUID id, String name, Job job, boolean isActive) {
         this.id = id;
         this.name = name;
         this.job = job;
+        this.isActive = isActive;
     }
 
     public UUID getId() {
@@ -47,5 +50,13 @@ public class User {
 
     public void setJob(Job job) {
         this.job = job;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

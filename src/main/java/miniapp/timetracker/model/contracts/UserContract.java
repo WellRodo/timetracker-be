@@ -2,25 +2,26 @@ package miniapp.timetracker.model.contracts;
 
 
 import miniapp.timetracker.model.User;
+import miniapp.timetracker.model.UserAuth;
 
 import java.util.UUID;
 
 public class UserContract {
 
-    private User user;
+    private UserAuth userAuth;
 
     public UserContract() {
     }
 
-    public UserContract(User user) {
-        this.user = user;
+    public UserContract(UserAuth userAuth) {
+        this.userAuth = userAuth;
     }
 
-    public User getUser() {
-        return user;
+    public UserAuth getUserAuth() {
+        return userAuth;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserAuth(UserAuth userAuth) {
+        this.userAuth = userAuth;
     }
 }

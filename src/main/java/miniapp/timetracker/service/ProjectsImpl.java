@@ -26,12 +26,28 @@ public class ProjectsImpl implements ProjectsService {
     @Override
     public List<Project> getAllProjects(String userId){
         List<UserProject> userProjectList= userProjectRepository.searchUserProjectsByUserIdEquals(UUID.fromString(userId));
-        return new ArrayList<Project>(userProjectList.stream().map(c -> c.getProject()).collect(Collectors.toList()));
+
+        List<Project> result = new ArrayList<Project>();
+        for (UserProject userProject : userProjectList) {
+            result.add(userProject.getProject());
+        }
+        return result;
     }
 
     @Override
+    public List<Project> getAllProjectsWithActive(String userId, Boolean isActive){
+        List<UserProject> userProjectList= userProjectRepository.searchUserProjectsByUserIdEquals(UUID.fromString(userId));
+
+        List<Project> result = new ArrayList<Project>();
+        for (UserProject userProject : userProjectList) {
+            if (userProject.getProject().isActive() != isActive) continue;
+            result.add(userProject.getProject());
+        }
+        return result;
+    }
+    @Override
     public Project getProject(UUID projectId) {
-        return projectRepository.findById(projectId).get();
+        return projectRepository.findByIdEqualsAndIsActiveTrue(projectId);
     }
 
     @Override
@@ -46,7 +62,8 @@ public class ProjectsImpl implements ProjectsService {
 
     @Override
     public void deleteProject(Project project) {
-        projectRepository.delete(project);
+        project.setActive(false);
+        projectRepository.save(project);
     }
 
     @Override
