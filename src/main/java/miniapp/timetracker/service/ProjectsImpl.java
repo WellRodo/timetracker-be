@@ -67,10 +67,10 @@ public class ProjectsImpl implements ProjectsService {
 
     @Override
     public EmployeeStatisticResponseContract getWorkTimeOnProjectsByUser(EmployeeStatisticRequestContract req) {
-        var currentDate = req.getMonthDate();
         EmployeeStatisticResponseContract workTimeByProject = new EmployeeStatisticResponseContract();
         workTimeByProject.setWorkWeeks(new ArrayList<>());
-        while (currentDate.isBefore(req.getMonthDate().plusMonths(3))) {
+        var currentDate = req.getMonthDate();
+        for (int i = 0; i < 12; i++) {
             List<WeekWorkTimeInterface> queryResult = projectRepository.getWorkTimeByWeek(currentDate, currentDate.plusDays(7), req.getEmployeeID(), req.getProjectIDs()); //query()
             for (WeekWorkTimeInterface w: queryResult) {
               workTimeByProject.addWorkWeeks(new WeekWorkTime(w.getProjectName(), w.getWeekDate(), w.getWorkTime()));
