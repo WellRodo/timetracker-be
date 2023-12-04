@@ -45,11 +45,10 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/register/{email}")
-    public ResponseEntity<Object> register(@PathVariable("email") String email, @RequestBody UserRegisterContract userRegisterContract){
-        String pass = emailService.sendSimpleMessage(email);
+    @PostMapping("/register")
+    public ResponseEntity<Object> register(@RequestBody UserRegisterContract userRegisterContract){
+        String pass = emailService.sendSimpleMessage(userRegisterContract.getUserAuth().getLogin());
         userService.saveUser(userRegisterContract);
-        userRegisterContract.getUserAuth().setLogin(email);
         userRegisterContract.getUserAuth().setPassword(pass);
         return ResponseEntity.ok(userAuthService.createNewUser(userRegisterContract));
     }
