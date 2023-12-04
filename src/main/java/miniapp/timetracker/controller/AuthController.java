@@ -1,10 +1,8 @@
 package miniapp.timetracker.controller;
 
 import miniapp.timetracker.model.UserAuth;
-import miniapp.timetracker.model.contracts.JwtRequest;
-import miniapp.timetracker.model.contracts.JwtResponse;
-import miniapp.timetracker.model.contracts.CustomException;
-import miniapp.timetracker.model.contracts.CustomUserDetails;
+import miniapp.timetracker.model.contracts.*;
+import miniapp.timetracker.service.EmailService;
 import miniapp.timetracker.service.JwtTokenUtils;
 import miniapp.timetracker.service.UserAuthService;
 import miniapp.timetracker.service.UserService;
@@ -19,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/auth")
+@RequestMapping
 public class AuthController {
     @Autowired
     private UserAuthService userAuthService;
@@ -29,7 +27,9 @@ public class AuthController {
     private JwtTokenUtils jwtTokenUtils;
     @Autowired
     private AuthenticationManager authenticationManager;
-    @PostMapping
+    @Autowired
+    private EmailService emailService;
+    @PostMapping("/auth")
     public ResponseEntity<Object> createAuthToken(@RequestBody JwtRequest authRequest){
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
@@ -43,6 +43,20 @@ public class AuthController {
         } catch (CustomException e){
             throw e;
         }
+    }
+
+    @PostMapping("/register/{email}")
+    public ResponseEntity<Object> register(@PathVariable("email") String email, @RequestBody UserRegisterContract userRegisterContract){
+        String pass = emailService.sendSimpleMessage(email);
+        userService.saveUser(userRegisterContract);
+        userRegisterContract.getUserAuth().setLogin(email);
+        userRegisterContract.getUserAuth().setPassword(pass);
+        return ResponseEntity.ok(userAuthService.createNewUser(userRegisterContract));
+    }
+
+    @GetMapping("/userAuth/get")
+    public ResponseEntity<Object> getAllUsersAuth(){
+        return ResponseEntity.ok(userAuthService.getAllUserAuth());
     }
 
 }

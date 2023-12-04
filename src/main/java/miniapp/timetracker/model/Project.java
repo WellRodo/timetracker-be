@@ -1,6 +1,7 @@
 package miniapp.timetracker.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.UUID;
 
@@ -11,6 +12,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     private String name;
+    @ColumnDefault("true")
     private boolean isActive;
     public Project() {
     }

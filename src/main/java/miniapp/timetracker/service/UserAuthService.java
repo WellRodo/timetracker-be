@@ -4,19 +4,19 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import miniapp.timetracker.model.UserAuth;
 import miniapp.timetracker.model.contracts.CustomUserDetails;
+import miniapp.timetracker.model.contracts.UserRegisterContract;
 import miniapp.timetracker.repository.UserAuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 
@@ -42,7 +42,20 @@ public class UserAuthService implements UserDetailsService {
         );
     }
 
-    public void createNewUser(UserAuth userAuth){
-        userAuthRepository.save(userAuth);
+    public UserAuth createNewUser(UserRegisterContract userRegisterContract){
+        UserAuth userAuth = userRegisterContract.getUserAuth();
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        userAuth.setPassword(bCryptPasswordEncoder.encode(userAuth.getPassword()));
+        return userAuthRepository.save(userAuth);
+    }
+
+    public Object getAllUserAuth(){
+        List<UserAuth> userAuths = (List<UserAuth>) userAuthRepository.findAll();
+        List<UserRegisterContract> userRegisterContracts = new ArrayList<>();
+        for(UserAuth userAuth: userAuths){
+            userRegisterContracts.add(new UserRegisterContract(userAuth));
+        }
+        return userRegisterContracts;
+
     }
 }
