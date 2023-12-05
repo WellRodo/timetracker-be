@@ -60,6 +60,7 @@ public class AuthController {
 
     @PutMapping("/userAuth")
     public ResponseEntity<Object> updateUsersAuth(@RequestBody UserRegisterContract userRegisterContract){
+        userService.update(userRegisterContract.getUserAuth().getUser());
         return ResponseEntity.ok(userAuthService.updateUserAuth(userRegisterContract));
     }
 }
