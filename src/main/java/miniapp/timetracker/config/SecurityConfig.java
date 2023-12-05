@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                         .authorizeHttpRequests(c ->c
                                 .requestMatchers("/timesheet/**").hasAnyRole("ADMIN", "USER")
+                                        .requestMatchers("/userAuth").hasRole("ADMIN")
                                         .requestMatchers("/auth").permitAll()
 /*                                .requestMatchers("/statistic/**").hasRole("ADMIN")
                                 .requestMatchers("/dictionary/**").hasRole("ADMIN")*/
