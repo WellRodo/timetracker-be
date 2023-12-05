@@ -43,12 +43,10 @@ public class SecurityConfig {
                 .exceptionHandling(c->c.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                         .authorizeHttpRequests(c ->c
+                                .requestMatchers("/statistic/**").hasRole("ADMIN")
                                 .requestMatchers("/timesheet/**").hasAnyRole("ADMIN", "USER")
-                                        .requestMatchers("/userAuth").hasRole("ADMIN")
-                                        .requestMatchers("/auth").permitAll()
-/*                                .requestMatchers("/statistic/**").hasRole("ADMIN")
-                                .requestMatchers("/dictionary/**").hasRole("ADMIN")*/
-                                .anyRequest().hasRole("ADMIN")
+                                .requestMatchers("/dictionary/**").hasAnyRole("ADMIN")
+                                .anyRequest().permitAll()
 
         );
         return http.build();
