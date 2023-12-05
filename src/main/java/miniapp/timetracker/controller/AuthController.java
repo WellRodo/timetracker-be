@@ -53,9 +53,13 @@ public class AuthController {
         return ResponseEntity.ok(userAuthService.createNewUser(userRegisterContract));
     }
 
-    @GetMapping("/userAuth/get")
-    public ResponseEntity<Object> getAllUsersAuth(){
+    @GetMapping("/userAuth")
+    public ResponseEntity<Object> getAllActiveUsersAuth(){
         return ResponseEntity.ok(userAuthService.getAllUserAuth());
     }
 
+    @PutMapping("/userAuth")
+    public ResponseEntity<Object> updateUsersAuth(@RequestBody UserRegisterContract userRegisterContract){
+        return ResponseEntity.ok(userAuthService.updateUserAuth(userRegisterContract));
+    }
 }

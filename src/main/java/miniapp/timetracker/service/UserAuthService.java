@@ -49,11 +49,15 @@ public class UserAuthService implements UserDetailsService {
         return userAuthRepository.save(userAuth);
     }
 
+    public UserAuth updateUserAuth(UserRegisterContract userRegisterContract){
+        return userAuthRepository.save(userRegisterContract.getUserAuth());
+    }
     public Object getAllUserAuth(){
         List<UserAuth> userAuths = (List<UserAuth>) userAuthRepository.findAll();
         List<UserRegisterContract> userRegisterContracts = new ArrayList<>();
         for(UserAuth userAuth: userAuths){
-            userRegisterContracts.add(new UserRegisterContract(userAuth));
+            if(userAuth.getUser().getIsActive())
+                userRegisterContracts.add(new UserRegisterContract(userAuth));
         }
         return userRegisterContracts;
 
