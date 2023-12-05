@@ -88,7 +88,7 @@ public class ProjectsImpl implements ProjectsService {
         workTimeByProject.setWorkWeeks(new ArrayList<>());
         var currentDate = req.getMonthDate();
         for (int i = 0; i < 12; i++) {
-            List<WeekWorkTimeInterface> queryResult = projectRepository.getWorkTimeByWeek(currentDate, currentDate.plusDays(7), req.getEmployeeID(), req.getProjectIDs()); //query()
+            List<WeekWorkTimeInterface> queryResult = projectRepository.getWorkTimeByWeek(req.getEmployeeID(),currentDate, currentDate.plusDays(7), req.getEmployeeID(), req.getProjectIDs()); //query()
             for (WeekWorkTimeInterface w: queryResult) {
               workTimeByProject.addWorkWeeks(new WeekWorkTime(w.getProjectName(), w.getWeekDate(), w.getWorkTime()));
             }

@@ -19,14 +19,14 @@ public interface ProjectRepository extends JpaRepository<Project, UUID> {
     @Query(value = "SELECT " +
             "tp.name AS projectName, :startDate AS weekDate, (SELECT sum(work_time) from tt_time_sheet tts " +
             "WHERE tts.project_id = tp.id AND tts.is_finished = true " +
-            "AND tts.date between :startDate AND :endDate) AS workTime " +
+            "AND tts.user_id = :userId AND tts.date between :startDate AND :endDate) AS workTime " +
             "FROM tt_project tp " +
             "WHERE tp.id IN (" +
             "SELECT project_id " +
             "FROM tt_user_project tup " +
             "WHERE user_id = :employee_id " +
             "AND project_id IN (:project_ids))", nativeQuery = true)
-    List<WeekWorkTimeInterface> getWorkTimeByWeek(@Param("startDate")LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("employee_id") UUID employeeID, @Param("project_ids") List<UUID> projectIDs );
+    List<WeekWorkTimeInterface> getWorkTimeByWeek(@Param("userId") UUID userId, @Param("startDate")LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("employee_id") UUID employeeID, @Param("project_ids") List<UUID> projectIDs);
 
     Project findByIdEqualsAndIsActiveTrue(UUID id);
 }
