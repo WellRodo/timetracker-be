@@ -63,4 +63,11 @@ public class AuthController {
         userService.update(userRegisterContract.getUserAuth().getUser());
         return ResponseEntity.ok(userAuthService.updateUserAuth(userRegisterContract));
     }
+
+    @PostMapping("/auth/resend")
+    public ResponseEntity<Object> resendPassword(@RequestBody UserRegisterContract userRegisterContract){
+        String pass = emailService.sendSimpleMessage(userRegisterContract.getUserAuth().getLogin());
+        userRegisterContract.getUserAuth().setPassword(pass);
+        return ResponseEntity.ok(userAuthService.updateUserAuth(userRegisterContract));
+    }
 }
