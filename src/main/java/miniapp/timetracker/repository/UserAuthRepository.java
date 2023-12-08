@@ -9,4 +9,6 @@ import java.util.UUID;
 
 public interface UserAuthRepository extends CrudRepository<UserAuth, UUID> {
     Optional<UserAuth> findByLogin(String login);
+
+    Optional<UserAuth> findByUserId(UUID userId);
 }

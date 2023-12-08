@@ -27,6 +27,7 @@ public class UserAuthService implements UserDetailsService {
     public Optional<UserAuth> findByLogin(String login){
         return userAuthRepository.findByLogin(login);
     }
+    public Optional<UserAuth> findByUserID(UUID userId){return  userAuthRepository.findByUserId(userId);}
 
     @Override
     @Transactional

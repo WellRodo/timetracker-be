@@ -15,6 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.memory.UserAttribute;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @CrossOrigin
 @RequestMapping
@@ -68,6 +70,13 @@ public class AuthController {
     public ResponseEntity<Object> resendPassword(@RequestBody UserRegisterContract userRegisterContract){
         String pass = emailService.sendSimpleMessage(userRegisterContract.getUserAuth().getLogin());
         userRegisterContract.getUserAuth().setPassword(pass);
+        return ResponseEntity.ok(userAuthService.updateUserAuth(userRegisterContract));
+    }
+
+    @PostMapping("/profile/password/change/{pass}")
+    public ResponseEntity<Object> changePassword(@RequestHeader("Authorization") String token, @PathVariable String password){
+        UserRegisterContract userRegisterContract = new UserRegisterContract(userAuthService.findByUserID(UUID.fromString(jwtTokenUtils.getUserId(token))).orElseThrow());
+        userRegisterContract.getUserAuth().setPassword(password);
         return ResponseEntity.ok(userAuthService.updateUserAuth(userRegisterContract));
     }
 }
