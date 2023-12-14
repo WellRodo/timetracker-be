@@ -2,18 +2,14 @@ package miniapp.timetracker.controller;
 
 import miniapp.timetracker.model.contracts.FinishTimeSheetsContract;
 import miniapp.timetracker.model.contracts.TimeSheetContract;
-import miniapp.timetracker.model.*;
 import miniapp.timetracker.model.contracts.*;
 import miniapp.timetracker.service.JwtTokenUtils;
-import miniapp.timetracker.service.ProjectsService;
 import miniapp.timetracker.service.TimeSheetService;
-import org.hibernate.bytecode.internal.bytebuddy.BytecodeProviderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -33,8 +29,8 @@ public class TimeSheetController {
 
     /** Получение таймшитов всех пользователей за определённую дату (Может РП-шник)*/
     @GetMapping("/day/{date}")
-    private ResponseEntity<Object> getTimeSheetsByDate(@PathVariable LocalDate date) {
-        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.GetTimeSheetsByDate(date));
+    private ResponseEntity<Object> getTimeSheetsByDate(@PathVariable LocalDate date, @RequestHeader("Authorization") String token) {
+        return ResponseEntity.status(HttpStatus.OK).body(timeSheetService.GetTimeSheetsByDate(date, UUID.fromString(jwtTokenUtils.getUserId(token))));
     }
 //    /** Получение общего времени на проекте за определенное время */
 //    @GetMapping("/project/time")

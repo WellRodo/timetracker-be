@@ -1,9 +1,7 @@
 package miniapp.timetracker.service;
 
-import miniapp.timetracker.model.Project;
 import miniapp.timetracker.model.TimeSheet;
 import miniapp.timetracker.model.contracts.*;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,7 +11,7 @@ public interface TimeSheetService {
     List<TimeSheet> GetTimeSheetFromPeriodAndProject(LocalDate startDate, LocalDate endDate, UUID projectId);
     ProjectTime GetProjectWorkTimePeriod(LocalDate startDate, LocalDate endDate, UUID projectId);
     TimeSheet SaveTimeSheet(TimeSheetContract timeSheet, UUID userId);
-    List<TimeSheet> GetTimeSheetsByDate(LocalDate date);
+    List<TimeSheet> GetTimeSheetsByDate(LocalDate date, UUID userID);
     TimeSheet DeleteTimeSheet(UUID timeSheetId);
     TimeSheet UpdateTimeSheet(TimeSheetContract timeSheet, UUID timeSheetId, UUID userID);
     void FinishTimeSheets(FinishTimeSheetsContract timeSheets);

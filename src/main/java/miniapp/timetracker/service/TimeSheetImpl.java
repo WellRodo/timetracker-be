@@ -63,9 +63,8 @@ public class TimeSheetImpl implements TimeSheetService {
     }
 
     @Override
-    public List<TimeSheet> GetTimeSheetsByDate(LocalDate date) {
-        List<TimeSheet> timeSheetList = timeSheetRepo.searchTimeSheetsByDateEquals(date);
-        return timeSheetList;
+    public List<TimeSheet> GetTimeSheetsByDate(LocalDate date, UUID userID) {
+        return timeSheetRepo.searchTimeSheetsByDateAndUserId(date, userID);
     }
 
     @Override
